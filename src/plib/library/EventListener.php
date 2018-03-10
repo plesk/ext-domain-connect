@@ -6,11 +6,15 @@ class Modules_DomainConnect_EventListener implements EventListener
     public function filterActions()
     {
         return [
+            'domain_create',
+            'site_create',
+            'subdomain_create',
         ];
     }
 
     public function handleEvent($objectType, $objectId, $action, $oldValues, $newValues)
     {
+        // only for new domains?
     }
 }
 
