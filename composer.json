@@ -1,0 +1,17 @@
+{
+  "name": "plesk/ext-domain-connect",
+  "config": {
+    "vendor-dir": "src/plib/vendor"
+  },
+  "autoload": {
+    "psr-4": {
+      "PleskExt\\DomainConnect\\": "modules/domain-connect/library/"
+    }
+  },
+  "require": {
+    "php": "^5.6|^7.1"
+  },
+  "require-dev": {
+    "plesk/pm-api-stubs": "^17.8.4"
+  }
+}
