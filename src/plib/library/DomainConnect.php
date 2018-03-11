@@ -4,7 +4,6 @@ namespace PleskExt\DomainConnect;
 
 class DomainConnect
 {
-    private $providerId = 'exampleservice.domainconnect.org';
     private $domain;
     private $urlPrefix;
     private $data;
@@ -32,11 +31,12 @@ class DomainConnect
 
     public function getApplyTemplateUrl($serviceId, array $properties)
     {
+        $providerId = \pm_Config::get('providerId');
         $properties = array_merge([
             'domain' => $this->domain->getName(),
             'providerName' => "Plesk",
         ], $properties);
         $properties = \http_build_query($properties);
-        return "{$this->getSyncUx()}/v2/domainTemplates/providers/{$this->providerId}/services/{$serviceId}/apply?{$properties}";
+        return "{$this->getSyncUx()}/v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
     }
 }

@@ -46,9 +46,9 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
         try {
             $domainConnect = new DomainConnect($domain);
-            $url = $domainConnect->getApplyTemplateUrl('template1', [
+            $url = $domainConnect->getApplyTemplateUrl(\pm_Config::get('webServiceId'), [
                 'IP' => reset($hostingIps),
-                'RANDOMTEXT' => 'test',
+                'RANDOMTEXT' => 'test', // TODO: remove when "plesk" template will be ready
             ]);
         } catch (\pm_Exception $e) {
             \pm_Log::info($e->getMessage());
