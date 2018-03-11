@@ -1,8 +1,6 @@
 <?php
 // Copyright 1999-2018. Plesk International GmbH.
 
-use PleskExt\DomainConnect\Template;
-
 class IndexController extends pm_Controller_Action
 {
     public function indexAction()
