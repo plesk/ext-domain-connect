@@ -52,6 +52,10 @@ class DomainConnect
 
     public function isEnabled()
     {
-        return $this->domain->getSetting('enabled', false);
+        if (!\pm_Config::get('newDomainsOnly')) {
+            return 'false' !== $this->domain->getSetting('enabled');
+        }
+
+        return 'true' === $this->domain->getSetting('enabled');
     }
 }
