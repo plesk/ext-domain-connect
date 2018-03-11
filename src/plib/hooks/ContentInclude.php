@@ -6,6 +6,8 @@ use PleskExt\DomainConnect\DomainConnect;
 
 class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 {
+    private $warnings = [];
+
     public function init()
     {
         $requestUri = $_SERVER["REQUEST_URI"];
@@ -25,7 +27,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     private function handleDomain(\pm_Domain $domain)
     {
         $domainConnect = new DomainConnect($domain);
-        if (!$domainConnect->isEnabled() && \pm_Config::get('newDomainsOnly')) {
+
+        if (!$domainConnect->isEnabled()) {
             return;
         }
         if (!$domain->hasHosting()) {
@@ -59,6 +62,15 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             'domain' => $domain->getDisplayName(),
             'url' => "javascript:window.open('{$url}', '', 'width=750,height=750');",
         ]);
-        \pm_View_Status::addWarning($message, true);
+        $this->warnings[] = [$domain->getId(), $message];
+    }
+
+    public function getJsOnReadyContent()
+    {
+        return implode('\n', array_map(function($warning) {
+            list($domainId, $warning) = $warning;
+            $message = \Plesk_Base_Utils_String::safeForJs($warning);
+            return "PleskExt.DomainConnect.warnAboutDomainResolvingIssue($domainId, '$message');";
+        }, $this->warnings));
     }
 }
