@@ -105,7 +105,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
     public function getJsOnReadyContent()
     {
-        return implode('\n', array_map(function($warning) {
+        return implode("\n", array_map(function($warning) {
             list($domainId, $warningMsg) = $warning;
             $message = \Plesk_Base_Utils_String::safeForJs($warningMsg);
             return "PleskExt.DomainConnect.warnAboutDomainResolvingIssue($domainId, '$message');";
