@@ -39,6 +39,9 @@ class Template
             }
             $record = $this->prepareRecord($record, $parameters);
 
+            if ($this->isExist($domainRecords, $record)) {
+                continue;
+            }
             $changes['toAdd'][] = $record;
             $changes['toRemove'] = array_merge(
                 $changes['toRemove'],
@@ -64,6 +67,23 @@ class Template
             }
         }
         return $record;
+    }
+
+    private function isExist(array $domainRecords, \stdClass $record)
+    {
+        $keys = ['type', 'host', 'pointsTo', 'data'];
+        foreach ($domainRecords as $domainRecord) {
+            $matches = true;
+            foreach ($keys as $key) {
+                $domainValue = isset($domainRecord->{$key}) ? $domainRecord->{$key} : null;
+                $recordValue = isset($record->{$key}) ? $record->{$key} : null;
+                $matches = $matches && $domainValue === $recordValue;
+            }
+            if ($matches) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function getConflicts(array $domainRecords, \stdClass $record)
