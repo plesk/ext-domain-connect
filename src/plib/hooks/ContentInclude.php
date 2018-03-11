@@ -56,6 +56,6 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             'domain' => $domain->getDisplayName(),
             'url' => "javascript:window.open('{$url}', '', 'width=750,height=750');",
         ]);
-        \pm_View_Status::addInfo($message, true);
+        \pm_View_Status::addWarning($message, true);
     }
 }
