@@ -94,6 +94,15 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         $this->warnings[] = [$domain->getId(), $message];
     }
 
+    public function getHeadContent()
+    {
+        if (empty($this->warnings)) {
+            return '';
+        }
+
+        return '<script src="' . pm_Context::getBaseUrl() . 'domain-connect.js"></script>';
+    }
+
     public function getJsOnReadyContent()
     {
         return implode('\n', array_map(function($warning) {
