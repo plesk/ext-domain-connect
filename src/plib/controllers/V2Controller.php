@@ -34,6 +34,8 @@ class V2Controller extends pm_Controller_Action
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
             $template->applyChanges($domain, $changes);
+            $this->_status->addInfo(\pm_Locale::lmsg('apply.success', ['domain' => $domainName]));
+            $this->redirect('/', ['prependBase' => false]);
         }
         $this->view->form = $this->getConfirmationForm($domainName, $providerName, $changes);
     }
