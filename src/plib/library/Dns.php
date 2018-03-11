@@ -23,13 +23,16 @@ class Dns
 
     public static function txtRecord($domainName)
     {
-        $dnsRecord = @dns_get_record($domainName, DNS_TXT);
-        if (false === $dnsRecord) {
+        $dnsRecords = @dns_get_record($domainName, DNS_TXT);
+        if (false === $dnsRecords) {
             $error = error_get_last()['message'];
             throw new \pm_Exception("Failed to resolve {$domainName}: {$error}");
         }
-        if (!empty($dnsRecord[0]['txt'])) {
-            return $dnsRecord[0]['txt'];
+        $validator = new \Zend_Validate_Hostname(\Zend_Validate_Hostname::ALLOW_ALL);
+        foreach ($dnsRecords as $record) {
+            if (!empty($record['txt']) && $validator->isValid($record['txt'])) {
+                return $record['txt'];
+            }
         }
         throw new \pm_Exception("Could not find TXT DNS record for {$domainName}.");
     }
