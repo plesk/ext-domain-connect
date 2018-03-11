@@ -10,17 +10,46 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
     public function init()
     {
-        $requestUri = $_SERVER["REQUEST_URI"];
-        $domainUris = [
-            '/smb/web/view',
-            '/smb/web/overview',
-        ];
-        foreach ($domainUris as $uri) {
-            if (0 === strpos($requestUri, $uri)) {
-                foreach (\pm_Session::getCurrentDomains() as $domain) {
-                    $this->handleDomain($domain);
-                }
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        if (is_null($request)) {
+            return;
+        }
+        $module = $request->getModuleName();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+
+        switch ("{$module}/{$controller}/${action}") {
+            case 'smb//' :
+            case 'smb/web/view' :
+            case 'smb/web/overview' :
+                // "Websites & Domains" page
+                $this->getWebsitesAndDomainsMessages();
+                break;
+            case 'admin/domain/list' :
+            case 'admin/subscription/list' :
+                // Admin domains/subscriptions list
+                $this->getDomainsListMessages();
+                break;
+            default:
+                return;
+        }
+    }
+
+    public function getWebsitesAndDomainsMessages()
+    {
+        foreach (\pm_Session::getCurrentDomains() as $domain) {
+            $this->handleDomain($domain);
+        }
+    }
+
+    public function getDomainsListMessages()
+    {
+        $client = \pm_Session::getClient();
+        foreach (\pm_Domain::getAllDomains() as $domain) {
+            if (!$client->isAdmin() && !$client->hasAccessToDomain($domain)) {
+                continue;
             }
+            $this->handleDomain($domain);
         }
     }
 
@@ -68,8 +97,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     public function getJsOnReadyContent()
     {
         return implode('\n', array_map(function($warning) {
-            list($domainId, $warning) = $warning;
-            $message = \Plesk_Base_Utils_String::safeForJs($warning);
+            list($domainId, $warningMsg) = $warning;
+            $message = \Plesk_Base_Utils_String::safeForJs($warningMsg);
             return "PleskExt.DomainConnect.warnAboutDomainResolvingIssue($domainId, '$message');";
         }, $this->warnings));
     }
