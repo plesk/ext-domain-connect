@@ -46,7 +46,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     {
         $client = \pm_Session::getClient();
         foreach (\pm_Domain::getAllDomains() as $domain) {
-            if (!$client->isAdmin() && !$client->hasAccessToDomain($domain)) {
+            if (!$client->isAdmin() && !$client->hasAccessToDomain($domain->getId())) {
                 continue;
             }
             $this->handleDomain($domain);
