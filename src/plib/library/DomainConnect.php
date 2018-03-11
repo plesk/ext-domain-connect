@@ -19,8 +19,12 @@ class DomainConnect
             $this->urlPrefix = Dns::txtRecord("_domainconnect.{$this->domain->getName()}");
         }
         if (null === $this->data) {
-            $client = new \Zend_Http_Client("https://{$this->urlPrefix}/v2/{$this->domain->getName()}/settings");
-            $response = $client->request(\Zend_Http_Client::GET);
+            try {
+                $client = new \Zend_Http_Client("https://{$this->urlPrefix}/v2/{$this->domain->getName()}/settings");
+                $response = $client->request(\Zend_Http_Client::GET);
+            } catch (\Zend_Uri_Exception $e) {
+                throw new \pm_Exception('Cannot fetch DomainConnect data: ' . $e->getMessage());
+            }
             $this->data = \json_decode($response->getBody());
         }
         return $this->data;
