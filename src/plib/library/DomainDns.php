@@ -17,7 +17,7 @@ class DomainDns
     {
         \pm_Log::info("Add record for domain #{$this->domain->getId()}");
         $apiClient = new Api\InternalClient();
-        $apiClient->dns()->create($this->_getPleskRecordData($this->domain->getId(), $record));
+        $apiClient->dns()->create($this->_getPleskRecordData($this->domain, $record));
     }
 
     public function removeRecord($record)
@@ -57,13 +57,17 @@ class DomainDns
     /**
      * Return RNS record data in Plesk format
      *
-     * @param int $domainId
+     * @param \pm_Domain $domain
      * @param \stdClass $record
      * @return array
      */
-    protected function _getPleskRecordData($domainId, \stdClass $record)
+    protected function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
     {
-        $host = $record->host;
+        if ('@' == $record->host) {
+            $host = '';
+        } else {
+            $host = $record->host;
+        }
         $value = '';
         $opt = '';
         switch ($record->type) {
@@ -84,7 +88,7 @@ class DomainDns
                 break;
         }
         return [
-            'site-id' => $domainId,
+            'site-id' => $domain->getId(),
             'type' => $record->type,
             'host' => $host,
             'value' => $value,
