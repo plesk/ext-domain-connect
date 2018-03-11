@@ -7,7 +7,7 @@ class IndexController extends pm_Controller_Action
 {
     public function indexAction()
     {
-        // TODO: add main info screen
+        $this->view->pageTitle = $this->lmsg('title');
     }
 
     public function hideWarningAction()
