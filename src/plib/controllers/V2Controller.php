@@ -32,6 +32,9 @@ class V2Controller extends pm_Controller_Action
         $domain = \pm_Domain::getByName($domainName);
         $template = new Template($provider, $service);
         $changes = $template->testRecords($domain, $groups, $parameters);
+        if ($this->getRequest()->isPost()) {
+            $template->applyChanges($domain, $changes);
+        }
         $this->view->form = $this->getConfirmationForm($domainName, $providerName, $changes);
     }
 
