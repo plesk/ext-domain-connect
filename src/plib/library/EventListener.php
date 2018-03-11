@@ -8,13 +8,17 @@ class Modules_DomainConnect_EventListener implements EventListener
         return [
             'domain_create',
             'site_create',
-            'subdomain_create',
         ];
     }
 
     public function handleEvent($objectType, $objectId, $action, $oldValues, $newValues)
     {
-        // only for new domains?
+        switch ($action) {
+            case 'domain_create':
+            case 'site_create':
+                $domain = \pm_Domain::getByDomainId($objectId);
+                $domain->setSetting('newDomain', true);
+        }
     }
 }
 

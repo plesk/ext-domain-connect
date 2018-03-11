@@ -24,6 +24,9 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
     private function handleDomain(\pm_Domain $domain)
     {
+        if (!$domain->getSetting('newDomain', false) && \pm_Config::get('newDomainsOnly')) {
+            return;
+        }
         if (!$domain->hasHosting()) {
             return;
         }
