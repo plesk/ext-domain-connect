@@ -11,11 +11,13 @@ class DomainConnect
     public function __construct(\pm_Domain $domain)
     {
         $this->domain = $domain;
-        $this->urlPrefix = Dns::txtRecord("_domainconnect.{$this->domain->getName()}");
     }
 
     private function getData()
     {
+        if (null === $this->urlPrefix) {
+            $this->urlPrefix = Dns::txtRecord("_domainconnect.{$this->domain->getName()}");
+        }
         if (null === $this->data) {
             $client = new \Zend_Http_Client("https://{$this->urlPrefix}/v2/{$this->domain->getName()}/settings");
             $response = $client->request(\Zend_Http_Client::GET);
