@@ -39,4 +39,19 @@ class DomainConnect
         $properties = \http_build_query($properties);
         return "{$this->getSyncUx()}/v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
     }
+
+    public function enable()
+    {
+        $this->domain->setSetting('enabled', true);
+    }
+
+    public function disable()
+    {
+        $this->domain->setSetting('enabled', false);
+    }
+
+    public function isEnabled()
+    {
+        return $this->domain->getSetting('enabled', false);
+    }
 }
