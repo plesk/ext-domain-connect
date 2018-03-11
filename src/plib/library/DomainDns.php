@@ -24,7 +24,7 @@ class DomainDns
     {
         \pm_Log::info("Remove record for domain #{$this->domain->getId()}");
         $apiClient = new Api\InternalClient();
-        // FIXME $apiClient->dns()->delete($this->_getPleskRecordData($this->domain->getId(), $record));
+        $apiClient->dns()->delete('id', $record->id);
     }
 
     public function getRecords()
@@ -36,6 +36,7 @@ class DomainDns
             $dnsRecordsInfo = $apiClient->dns()->getAll('site-id', $this->domain->getId());
             foreach ($dnsRecordsInfo as $dnsRecordInfo) {
                 $records[] = (object)array_merge([
+                    'id' => $dnsRecordInfo->id,
                     'type' => $dnsRecordInfo->type,
                 ], $this->_getDomainConnectRecordData(
                     $this->domain->getName(),
