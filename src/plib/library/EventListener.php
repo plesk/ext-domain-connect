@@ -16,8 +16,8 @@ class Modules_DomainConnect_EventListener implements EventListener
         switch ($action) {
             case 'domain_create':
             case 'site_create':
-                $domain = \pm_Domain::getByDomainId($objectId);
-                $domain->setSetting('newDomain', true);
+                $domainConnect = new \PleskExt\DomainConnect\DomainConnect(\pm_Domain::getByDomainId($objectId));
+                $domainConnect->enable();
         }
     }
 }

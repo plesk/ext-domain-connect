@@ -24,7 +24,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
     private function handleDomain(\pm_Domain $domain)
     {
-        if (!$domain->getSetting('newDomain', false) && \pm_Config::get('newDomainsOnly')) {
+        $domainConnect = new DomainConnect($domain);
+        if (!$domainConnect->isEnabled() && \pm_Config::get('newDomainsOnly')) {
             return;
         }
         if (!$domain->hasHosting()) {
@@ -45,7 +46,6 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         \pm_Log::debug("Domain {$domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
 
         try {
-            $domainConnect = new DomainConnect($domain);
             $url = $domainConnect->getApplyTemplateUrl(\pm_Config::get('webServiceId'), [
                 'IP' => reset($hostingIps),
                 'RANDOMTEXT' => 'test', // TODO: remove when "plesk" template will be ready
