@@ -17,14 +17,21 @@ class DomainConnect
     {
         if (null === $this->urlPrefix) {
             $this->urlPrefix = Dns::txtRecord("_domainconnect.{$this->domain->getName()}");
+            \pm_Log::debug("TXT _domainconnect: {$this->urlPrefix}");
         }
         if (null === $this->data) {
+            $url = "https://{$this->urlPrefix}/v2/{$this->domain->getName()}/settings";
+            \pm_Log::debug("DomainConnect request: GET {$url}");
             try {
-                $client = new \Zend_Http_Client("https://{$this->urlPrefix}/v2/{$this->domain->getName()}/settings");
+                $client = new \Zend_Http_Client($url);
                 $response = $client->request(\Zend_Http_Client::GET);
             } catch (\Zend_Uri_Exception $e) {
-                throw new \pm_Exception('Cannot fetch DomainConnect data: ' . $e->getMessage());
+                throw new \pm_Exception("Cannot fetch DomainConnect data: {$e->getMessage()}");
             }
+            if ($response->getStatus() !== 200) {
+                throw new \pm_Exception("Cannot fetch DomainConnect data {$response->getStatus()}: {$response->getMessage()}");
+            }
+            \pm_Log::debug("DomainConnect response {$response->getStatus()}: {$response->getBody()}");
             $this->data = \json_decode($response->getBody());
         }
         return $this->data;

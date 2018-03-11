@@ -53,7 +53,7 @@ class Template
 
     private function getDomainRecords(\pm_Domain $domain)
     {
-        return (new DomainDns)->getRecords($domain);
+        return (new DomainDns($domain))->getRecords();
     }
 
     private function prepareRecord(\stdClass $record, array $parameters)
@@ -111,5 +111,16 @@ class Template
             }
         }
         return $conflicts;
+    }
+
+    public function applyChanges(\pm_Domain $domain, array $changes)
+    {
+        $domainDns = new DomainDns($domain);
+        foreach ($changes['toRemove'] as $record) {
+            $domainDns->removeRecord($record);
+        }
+        foreach ($changes['toAdd'] as $record) {
+            $domainDns->addRecord($record);
+        }
     }
 }

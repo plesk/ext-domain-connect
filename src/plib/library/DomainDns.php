@@ -6,31 +6,39 @@ use \PleskX\Api;
 
 class DomainDns
 {
-    public function addRecord(\pm_Domain $domain, $record)
+    private $domain;
+
+    public function __construct(\pm_Domain $domain)
     {
-        \pm_Log::info("Add record for domain #{$domain->getId()}");
-        $apiClient = new Api\InternalClient();
-        $apiClient->dns()->create($this->_getPleskRecordData($domain->getId(), $record));
+        $this->domain = $domain;
     }
 
-    /**
-     * Return list of Plesk DNS record for given domain
-     *
-     * @param \pm_Domain $domain
-     * @return array
-     */
-    public function getRecords(\pm_Domain $domain)
+    public function addRecord($record)
     {
-        \pm_Log::info("Retrieve record for domain #{$domain->getId()}");
+        \pm_Log::info("Add record for domain #{$this->domain->getId()}");
+        $apiClient = new Api\InternalClient();
+        $apiClient->dns()->create($this->_getPleskRecordData($this->domain->getId(), $record));
+    }
+
+    public function removeRecord($record)
+    {
+        \pm_Log::info("Remove record for domain #{$this->domain->getId()}");
+        $apiClient = new Api\InternalClient();
+        // FIXME $apiClient->dns()->delete($this->_getPleskRecordData($this->domain->getId(), $record));
+    }
+
+    public function getRecords()
+    {
+        \pm_Log::info("Retrieve record for domain #{$this->domain->getId()}");
         $apiClient = new Api\InternalClient();
         $records = [];
         try {
-            $dnsRecordsInfo = $apiClient->dns()->getAll('site-id', $domain->getId());
+            $dnsRecordsInfo = $apiClient->dns()->getAll('site-id', $this->domain->getId());
             foreach ($dnsRecordsInfo as $dnsRecordInfo) {
                 $records[] = (object)array_merge([
                     'type' => $dnsRecordInfo->type,
                 ], $this->_getDomainConnectRecordData(
-                    $domain->getName(),
+                    $this->domain->getName(),
                     $dnsRecordInfo->type,
                     $dnsRecordInfo->host,
                     $dnsRecordInfo->value,
@@ -38,7 +46,7 @@ class DomainDns
                 ));
             }
         } catch (\Exception $e) {
-            \pm_Log::err("Unable to retrieve DNS records for domain '{$domain->getDisplayName()}'");
+            \pm_Log::err("Unable to retrieve DNS records for domain '{$this->domain->getDisplayName()}'");
             \pm_Log::debug($e);
             return [];
         }
@@ -48,11 +56,11 @@ class DomainDns
     /**
      * Return RNS record data in Plesk format
      *
-     * @param $domainId
-     * @param $record
+     * @param int $domainId
+     * @param \stdClass $record
      * @return array
      */
-    protected function _getPleskRecordData($domainId, $record)
+    protected function _getPleskRecordData($domainId, \stdClass $record)
     {
         $host = $record->host;
         $value = '';
@@ -83,7 +91,7 @@ class DomainDns
         ];
     }
 
-    protected function _getRecordValueByKeys($record, $keys)
+    protected function _getRecordValueByKeys(\stdClass $record, array $keys)
     {
         foreach ($keys as $key) {
             if (isset($record->$key)) {
