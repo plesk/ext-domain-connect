@@ -30,6 +30,8 @@ class V2Controller extends pm_Controller_Action
         }, ARRAY_FILTER_USE_KEY);
 
         $domain = \pm_Domain::getByName($domainName);
+        $this->checkDomainAccess($domain);
+
         $template = new Template($provider, $service);
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
@@ -38,6 +40,13 @@ class V2Controller extends pm_Controller_Action
             $this->redirect('/', ['prependBase' => false]);
         }
         $this->view->form = $this->getConfirmationForm($domainName, $providerName, $changes);
+    }
+
+    private function checkDomainAccess(\pm_Domain $domain)
+    {
+        if (!pm_Session::getClient()->hasAccessToDomain($domain)) {
+            throw new \pm_Exception("Permission denied");
+        }
     }
 
     private function getConfirmationForm($domainName, $providerName, array $changes)
