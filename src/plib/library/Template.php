@@ -2,8 +2,6 @@
 // Copyright 1999-2018. Plesk International GmbH.
 namespace PleskExt\DomainConnect;
 
-use PleskExt\DomainConnect\DomainDns;
-
 class Template
 {
     private $data;
@@ -23,7 +21,7 @@ class Template
                 return $data;
             }
         }
-        throw new \pm_Exception("Could not find template with providerId = '{$provider}' and serviceId = '{$service}'");
+        throw new Exception\TemplateNotFound("Could not find template with providerId = '{$provider}' and serviceId = '{$service}'");
     }
 
     public function testRecords(\pm_Domain $domain, array $groups = [], array $parameters = [])
