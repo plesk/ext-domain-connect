@@ -17,7 +17,7 @@ class DomainDns
     {
         \pm_Log::info("Add record for domain #{$this->domain->getId()}");
         $apiClient = new Api\InternalClient();
-        $apiClient->dns()->create($this->_getPleskRecordData($this->domain, $record));
+        $apiClient->dns()->create($this->_getPleskRecordData($this->domain->getId(), $record));
     }
 
     public function removeRecord($record)
@@ -57,11 +57,11 @@ class DomainDns
     /**
      * Return RNS record data in Plesk format
      *
-     * @param \pm_Domain $domain
+     * @param int $domainId
      * @param \stdClass $record
      * @return array
      */
-    protected function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
+    protected function _getPleskRecordData($domainId, \stdClass $record)
     {
         if ('@' == $record->host) {
             $host = '';
@@ -85,10 +85,14 @@ class DomainDns
                 $value = $this->_getRecordValueByKeys($record, ['data', 'target']);
                 break;
             case 'SRV':
+                $srvName = $this->_getRecordValueByKeys($record, ['name', 'service']);
+                $host = "_{$srvName}._{$record->protocol}.{$host}";
+                $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
+                $opt = "{$record->priority} {$record->weight} {$record->port}";
                 break;
         }
         return [
-            'site-id' => $domain->getId(),
+            'site-id' => $domainId,
             'type' => $record->type,
             'host' => $host,
             'value' => $value,
@@ -145,9 +149,9 @@ class DomainDns
                 $optData = explode(' ', $opt);
                 $serviceHost = implode('.' , array_slice($hostData, 2));
                 return [
-                    'name' => isset($hostData[0]) ? $hostData[0] : '',
-                    'service' => isset($hostData[0]) ? $hostData[0] : '',
-                    'protocol' => isset($hostData[1]) ? $hostData[1] : '',
+                    'name' => isset($hostData[0]) ? ltrim($hostData[0], '_') : '',
+                    'service' => isset($hostData[0]) ? ltrim($hostData[0], '_') : '',
+                    'protocol' => isset($hostData[1]) ? ltrim($hostData[1], '_') : '',
                     'host' => $this->_convertRecordHost($domainName, $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',
