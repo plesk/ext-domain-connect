@@ -4,7 +4,7 @@
     <id>domain-connect</id>
     <name>Domain Connect</name>
     <description></description>
-	<category>developer</category>
+    <category>dns</category>
     <url>https://plesk.com</url>
     <version>1.0.0</version>
     <release>1</release>
