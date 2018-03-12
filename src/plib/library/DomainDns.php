@@ -17,7 +17,7 @@ class DomainDns
     {
         \pm_Log::info("Add record for domain #{$this->domain->getId()}");
         $apiClient = new Api\InternalClient();
-        $apiClient->dns()->create($this->_getPleskRecordData($this->domain->getId(), $record));
+        $apiClient->dns()->create($this->_getPleskRecordData($this->domain, $record));
     }
 
     public function removeRecord($record)
@@ -57,11 +57,11 @@ class DomainDns
     /**
      * Return RNS record data in Plesk format
      *
-     * @param int $domainId
+     * @param \pm_Domain $domain
      * @param \stdClass $record
      * @return array
      */
-    protected function _getPleskRecordData($domainId, \stdClass $record)
+    protected function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
     {
         if ('@' == $record->host) {
             $host = '';
@@ -73,9 +73,11 @@ class DomainDns
         switch ($record->type) {
             case 'A':
             case 'AAAA':
+                $value = $record->pointsTo;
+                break;
             case 'CNAME':
             case 'NS':
-                $value = $record->pointsTo;
+                $value = '@' == $record->pointsTo ? $domain->getName() : $record->pointsTo;
                 break;
             case 'MX':
                 $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
@@ -92,7 +94,7 @@ class DomainDns
                 break;
         }
         return [
-            'site-id' => $domainId,
+            'site-id' => $domain->getId(),
             'type' => $record->type,
             'host' => $host,
             'value' => $value,
@@ -125,22 +127,26 @@ class DomainDns
         switch ($type) {
             case 'A':
             case 'AAAA':
+                return [
+                    'host' => $this->_convertHost($domainName, $host),
+                    'pointsTo' => $value,
+                ];
             case 'CNAME':
             case 'NS':
                 return [
-                    'host' => $this->_convertRecordHost($domainName, $host),
-                    'pointsTo' => $value,
+                    'host' => $this->_convertHost($domainName, $host),
+                    'pointsTo' => $this->_convertHost($domainName, $value),
                 ];
             case 'MX':
                 return [
-                    'host' => $this->_convertRecordHost($domainName, $host),
+                    'host' => $this->_convertHost($domainName, $host),
                     'pointsTo' => $value,
                     'priority' => $opt,
                     'target' => $value,
                 ];
             case 'TXT':
                 return [
-                    'host' => $this->_convertRecordHost($domainName, $host),
+                    'host' => $this->_convertHost($domainName, $host),
                     'data' => $value,
                     'target' => $value,
                 ];
@@ -152,7 +158,7 @@ class DomainDns
                     'name' => isset($hostData[0]) ? ltrim($hostData[0], '_') : '',
                     'service' => isset($hostData[0]) ? ltrim($hostData[0], '_') : '',
                     'protocol' => isset($hostData[1]) ? ltrim($hostData[1], '_') : '',
-                    'host' => $this->_convertRecordHost($domainName, $serviceHost),
+                    'host' => $this->_convertHost($domainName, $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',
                     'port' => isset($optData[2]) ? $optData[2] : '',
@@ -175,7 +181,7 @@ class DomainDns
      * @param $rawHost
      * @return string
      */
-    protected function _convertRecordHost($domainName, $rawHost)
+    protected function _convertHost($domainName, $rawHost)
     {
         $host = $rawHost;
         $pos = strrpos($rawHost, $domainName);
