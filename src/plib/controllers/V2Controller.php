@@ -2,6 +2,7 @@
 // Copyright 1999-2018. Plesk International GmbH.
 
 use PleskExt\DomainConnect\Template;
+use PleskExt\DomainConnect\Exception\TemplateNotFound;
 
 class V2Controller extends pm_Controller_Action
 {
@@ -9,6 +10,8 @@ class V2Controller extends pm_Controller_Action
     {
         if ($this->isAction('apply')) {
             $this->forward('apply');
+        } else {
+            $this->forward('query');
         }
     }
 
@@ -16,6 +19,27 @@ class V2Controller extends pm_Controller_Action
     {
         // Zend_Request_Http does not return hasParam if it has no pair in the path
         return (bool)preg_match("#/{$action}(/\?|\?|/$|$)#", $this->getRequest()->getRequestUri());
+    }
+
+    public function queryAction()
+    {
+        $provider = $this->getParam('providers');
+        $service = $this->getParam('services');
+
+        try {
+            new Template($provider, $service);
+        } catch (TemplateNotFound $e) {
+            $this->getResponse()
+                ->setBody($this->view->escape($e->getMessage()))
+                ->setHttpResponseCode(404);
+        } catch (\pm_Exception $e) {
+            $this->getResponse()
+                ->setBody($this->view->escape($e->getMessage()))
+                ->setHttpResponseCode(500);
+        }
+
+        $this->getHelper('viewRenderer')->setNoRender();
+        $this->getHelper('layout')->disableLayout();
     }
 
     public function applyAction()
@@ -30,6 +54,8 @@ class V2Controller extends pm_Controller_Action
         }, ARRAY_FILTER_USE_KEY);
 
         $domain = \pm_Domain::getByName($domainName);
+        $this->checkDomainAccess($domain);
+
         $template = new Template($provider, $service);
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
@@ -38,6 +64,13 @@ class V2Controller extends pm_Controller_Action
             $this->redirect('/', ['prependBase' => false]);
         }
         $this->view->form = $this->getConfirmationForm($domainName, $providerName, $changes);
+    }
+
+    private function checkDomainAccess(\pm_Domain $domain)
+    {
+        if (!pm_Session::getClient()->hasAccessToDomain($domain)) {
+            throw new \pm_Exception("Permission denied");
+        }
     }
 
     private function getConfirmationForm($domainName, $providerName, array $changes)
