@@ -129,6 +129,7 @@ class V2Controller extends pm_Controller_Action
             case 'A':
             case 'AAAA':
             case 'CNAME':
+            case 'MX':
                 return "{$record->host} IN {$record->type} {$record->pointsTo}";
             case 'TXT':
                 return "{$record->host} IN {$record->type} {$record->data}";
