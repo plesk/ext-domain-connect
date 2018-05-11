@@ -11,6 +11,7 @@ $messages = [
         'toRemove' => 'The following records will be removed:',
         'toAdd' => 'The following records will be added:',
         'connectButton' => 'Connect',
+        'cancelButton' => 'Cancel',
         'success' => 'The changes were successfully applied to %%domain%%.',
     ],
     'exceptions' => [
