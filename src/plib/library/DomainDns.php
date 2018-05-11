@@ -88,7 +88,7 @@ class DomainDns
                 break;
             case 'SRV':
                 $srvName = $this->_getRecordValueByKeys($record, ['name', 'service']);
-                $host = "_{$srvName}._{$record->protocol}.{$host}";
+                $host = rtrim("{$srvName}.{$record->protocol}.{$host}", '.');
                 $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
                 $opt = "{$record->priority} {$record->weight} {$record->port}";
                 break;
