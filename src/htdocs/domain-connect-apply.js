@@ -49,7 +49,9 @@
             ce('img', {class: "ext-domain-connect--logo", src: app.logoUrl})
         ]),
         ce('p', {}, [lmsg('description', {domain: app.domainName, providerName: app.providerName})]),
-        ce('a', {id: 'ext-domain-connect--details-link'}),
+        ce('p', {}, [
+            ce('a', {id: 'ext-domain-connect--details-link'})
+        ]),
         ce('div', {id: 'ext-domain-connect--details'}, [
             ce('div', {}, [
                 ce('div', {}, [lmsg('toRemove')]),
