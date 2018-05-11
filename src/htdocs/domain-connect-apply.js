@@ -99,8 +99,8 @@
             ce('div', {class: "box-area"}, [
                 ce('div', {class: "form-row"}, [
                     ce('div', {class: "single-row"}, [
-                        ce('button', {class: "btn btn-primary", type: 'button'}, lmsg('connectButton')),
-                        ce('button', {class: "btn", type: 'button'}, lmsg('cancelButton'))
+                        ce('button', {id: "ext-domain-connect--submit", class: "btn btn-primary", type: 'button'}, lmsg('connectButton')),
+                        ce('button', {id: "ext-domain-connect--cancel", class: "btn", type: 'button'}, lmsg('cancelButton'))
                     ])
                 ])
             ])
@@ -119,6 +119,20 @@
         } else {
             details.classList.add('hidden');
             render(detailsLink, lmsg('showDetails'));
+        }
+    });
+
+    document.getElementById('ext-domain-connect--submit').addEventListener('click', function () {
+        var form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        render(document.body, form);
+        form.submit();
+    });
+    document.getElementById('ext-domain-connect--cancel').addEventListener('click', function () {
+        if (app.returnUrl) {
+            window.location = app.returnUrl;
+        } else {
+            window.close();
         }
     });
 })(PleskExt.DomainConnect);
