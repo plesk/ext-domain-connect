@@ -12,6 +12,18 @@
         });
         return el;
     };
+    var render = function (el) {
+        app.renderTo.appendChild(el);
+    };
+
+    var lmsg = function (key, params) {
+        params = params || {};
+        var str = app.locale[key] || '[' + key + ']';
+        Object.keys(params).forEach(function (key) {
+            str = str.replace('%%' + key + '%%', params[key]);
+        });
+        return str;
+    };
 
     var displayRecord = function (record) {
         switch (record.type) {
@@ -31,30 +43,52 @@
             displayRecord(record)
         ]);
     };
-    app.renderTo.appendChild(
+
+    [
+        ce('p', {}, [
+            ce('img', {class: "ext-domain-connect--logo", src: app.logoUrl})
+        ]),
+        ce('p', {}, [lmsg('description', {domain: app.domainName, providerName: app.providerName})]),
+        ce('a', {id: 'ext-domain-connect--details-link'}),
+        ce('div', {id: 'ext-domain-connect--details'}, [
+            ce('div', {}, [
+                ce('div', {}, [lmsg('toRemove')]),
+                ce('ul', {}, app.changes.toRemove.map(renderRecordRow))
+            ]),
+            ce('div', {}, [
+                ce('div', {}, [lmsg('toAdd')]),
+                ce('ul', {}, app.changes.toAdd.map(renderRecordRow))
+            ])
+        ]),
+        ce('p', {}, [lmsg('action', {providerName: app.providerName})]),
         ce('div', {class: "btns-box"}, [
             ce('div', {class: "box-area"}, [
-                ce('div', {}, [app.locale.description]),
-                ce('div', {}, [
-                    ce('div', {}, [app.locale.toRemove]),
-                    ce('ul', {}, app.changes.toRemove.map(renderRecordRow))
-                ]),
-                ce('div', {}, [
-                    ce('div', {}, [app.locale.toAdd]),
-                    ce('ul', {}, app.changes.toAdd.map(renderRecordRow))
-                ]),
-                ce('div', {}, [app.locale.action]),
                 ce('div', {class: "form-row"}, [
                     ce('div', {class: "single-row"}, [
-                        ce('button', {class: "btn btn-primary", type: 'button'}, [
-                            app.locale.connectButton
-                        ]),
-                        ce('button', {class: "btn", type: 'button'}, [
-                            app.locale.cancelButton
-                        ])
+                        ce('button', {class: "btn btn-primary", type: 'button'}, [lmsg('connectButton')]),
+                        ce('button', {class: "btn", type: 'button'}, [lmsg('cancelButton')])
                     ])
                 ])
             ])
         ])
-    );
+    ].forEach(render);
+
+    var detailsLink = document.getElementById('ext-domain-connect--details-link');
+    var details = document.getElementById('ext-domain-connect--details');
+    var showDetails = true;
+    var toggleDetails = function (event) {
+        if (event) {
+            event.preventDefault();
+        }
+        showDetails = !showDetails;
+        if (showDetails) {
+            details.classList.remove('hidden');
+            detailsLink.innerText = lmsg('hideDetails');
+        } else {
+            details.classList.add('hidden');
+            detailsLink.innerText = lmsg('showDetails');
+        }
+    };
+    toggleDetails();
+    detailsLink.addEventListener('click', toggleDetails);
 })(PleskExt.DomainConnect);

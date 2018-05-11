@@ -65,7 +65,8 @@ class V2Controller extends pm_Controller_Action
         }
 
         $this->view->domainName = $domainName;
-        $this->view->providerName = $providerName;
+        $this->view->providerName = $providerName ?: $template->getProviderName();
+        $this->view->logoUrl = $template->getLogoUrl();
         $this->view->changes = $changes;
         $this->view->locale = \pm_Locale::getSection('apply');
     }

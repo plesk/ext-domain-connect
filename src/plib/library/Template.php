@@ -121,4 +121,14 @@ class Template
             $domainDns->addRecord($record);
         }
     }
+
+    public function getProviderName()
+    {
+        return isset($this->data->providerName) ? $this->data->providerName : 'unknown';
+    }
+
+    public function getLogoUrl()
+    {
+        return isset($this->data->logoUrl) ? $this->data->logoUrl : '';
+    }
 }
