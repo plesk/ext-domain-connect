@@ -1,4 +1,13 @@
 <?php
 // Copyright 1999-2018. Plesk International GmbH.
+$this->headLink()->appendStylesheet(\pm_Context::getBaseUrl() . 'domain-connect.css');
 ?>
-<?= $this->form ?>
+<div id="ext-<?= \pm_Context::getModuleId() ?>-app"></div>
+<script>
+//<![CDATA[
+Jsw.namespace('PleskExt.DomainConnect');
+PleskExt.DomainConnect = <?= json_encode($this->getVars()) ?>;
+PleskExt.DomainConnect.renderTo = document.getElementById('ext-<?= \pm_Context::getModuleId() ?>-app');
+//]]>
+</script>
+<script src="<?= \pm_Context::getBaseUrl() ?>domain-connect-apply.js"></script>

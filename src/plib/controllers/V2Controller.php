@@ -63,77 +63,18 @@ class V2Controller extends pm_Controller_Action
             $this->_status->addInfo(\pm_Locale::lmsg('apply.success', ['domain' => $domainName]));
             $this->redirect('/', ['prependBase' => false]);
         }
-        $this->view->form = $this->getConfirmationForm($domainName, $providerName, $changes);
+
+        $this->view->domainName = $domainName;
+        $this->view->providerName = $providerName ?: $template->getProviderName();
+        $this->view->logoUrl = $template->getLogoUrl();
+        $this->view->changes = $changes;
+        $this->view->locale = \pm_Locale::getSection('apply');
     }
 
     private function checkDomainAccess(\pm_Domain $domain)
     {
         if (!pm_Session::getClient()->hasAccessToDomain($domain)) {
             throw new \pm_Exception("Permission denied");
-        }
-    }
-
-    private function getConfirmationForm($domainName, $providerName, array $changes)
-    {
-        $form = new pm_Form_Simple();
-        $form->addElement('description', 'description', [
-            'description' => \pm_Locale::lmsg('apply.description', [
-                'domain' => $this->view->escape($domainName),
-                'providerName' => $this->view->escape($providerName),
-            ]),
-            'escape' => false,
-        ]);
-
-        if (!empty($changes['toRemove'])) {
-            $form->addElement('description', 'toRemove', [
-                'description' => \pm_Locale::lmsg('apply.toRemove'),
-            ]);
-        }
-        foreach ($changes['toRemove'] as $record) {
-            $form->addElement('simpleText', "toRemove{$this->recordId($record)}", [
-                'value' => $this->displayRecord($record),
-            ]);
-        }
-        if (!empty($changes['toAdd'])) {
-            $form->addElement('description', 'toAdd', [
-                'description' => \pm_Locale::lmsg('apply.toAdd'),
-            ]);
-        }
-        foreach ($changes['toAdd'] as $record) {
-            $form->addElement('simpleText', "toAdd{$this->recordId($record)}", [
-                'value' => $this->displayRecord($record),
-            ]);
-        }
-
-        $form->addElement('description', 'action', [
-            'description' => \pm_Locale::lmsg('apply.action', [
-                'providerName' => $this->view->escape($providerName),
-            ]),
-            'escape' => false,
-        ]);
-        $form->addControlButtons([
-            'sendTitle' => \pm_Locale::lmsg('apply.connectButton'),
-            'hideLegend' => true,
-        ]);
-        return $form;
-    }
-
-    private function recordId(\stdClass $record)
-    {
-        return md5(json_encode($record));
-    }
-
-    private function displayRecord(\stdClass $record)
-    {
-        switch ($record->type) {
-            case 'A':
-            case 'AAAA':
-            case 'CNAME':
-                return "{$record->host} IN {$record->type} {$record->pointsTo}";
-            case 'TXT':
-                return "{$record->host} IN {$record->type} {$record->data}";
-            default:
-                return "{$record->host} IN {$record->type}";
         }
     }
 }

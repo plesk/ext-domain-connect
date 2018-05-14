@@ -7,10 +7,13 @@ $messages = [
     'message.connect' => 'Your domain <strong>%%domain%%</strong> seems not to be resolving to the IP address of the current Plesk instance. The DNS settings can be configured automatically using Domain Connect. <a href="%%url%%">Click here to initialise the proper configuration</a>.',
     'apply' => [
         'description' => 'Connecting <strong>%%domain%%</strong> to <strong>%%providerName%%</strong> requires us to change several DNS records.',
-        'action' => '<br/>Connect to <strong>%%providerName%%</strong> and change your domain\'s DNS records?',
+        'action' => 'Connect to <strong>%%providerName%%</strong> and change your domain\'s DNS records?',
+        'showDetails' => 'Show details',
+        'hideDetails' => 'Hide details',
         'toRemove' => 'The following records will be removed:',
         'toAdd' => 'The following records will be added:',
         'connectButton' => 'Connect',
+        'cancelButton' => 'Cancel',
         'success' => 'The changes were successfully applied to %%domain%%.',
     ],
     'exceptions' => [
