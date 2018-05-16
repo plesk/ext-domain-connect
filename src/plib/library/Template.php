@@ -175,6 +175,12 @@ class Template
                     }
                     break;
                 case 'TXT':
+                    if ($domainRecord->type === $record->type
+                        && $domainRecord->host === $record->host
+                        && preg_match('/^v=(?<protocol>[^;\s])/', $record->data, $matches)
+                        && 0 === strpos($domainRecord->data, "v={$matches['protocol']}")) {
+                        $conflicts[] = $domainRecord;
+                    }
                     break;
             }
         }
