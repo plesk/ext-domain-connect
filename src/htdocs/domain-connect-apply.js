@@ -12,6 +12,9 @@
             el.setAttribute(key, attr[key]);
         });
         children.forEach(function (child) {
+            if (!child) {
+                return;
+            }
             if (typeof child === 'string') {
                 child = document.createTextNode(child);
             }
@@ -65,7 +68,7 @@
                 return record.host + ' IN ' + record.type + ' ' + record.data;
             case 'SRV':
                 return (record.name || record.service) + '.' + record.protocol + '.' +
-                    record.host + ' IN SRV ' + (record.pointsTo || record.target) +
+                    record.host + ' IN SRV ' + (record.pointsTo || record.target) + ' ' +
                     record.priority + ' ' + record.weight + ' ' + record.port;
             default:
                 return record.host + ' IN ' + record.type;
@@ -85,14 +88,14 @@
             ce('a', {id: 'ext-domain-connect--details-link'}, lmsg('showDetails'))
         ]),
         ce('div', {id: 'ext-domain-connect--details', class: "hidden"}, [
-            ce('div', {}, [
+            app.changes.toRemove.length ? ce('div', {}, [
                 ce('div', {}, lmsg('toRemove')),
                 ce('ul', {}, app.changes.toRemove.map(renderRecordRow))
-            ]),
-            ce('div', {}, [
+            ]) : null,
+            app.changes.toAdd.length ? ce('div', {}, [
                 ce('div', {}, lmsg('toAdd')),
                 ce('ul', {}, app.changes.toAdd.map(renderRecordRow))
-            ])
+            ]) : lmsg('nothingToAdd')
         ]),
         ce('p', {}, lmsg('action', {providerName: app.providerName})),
         ce('div', {class: "btns-box"}, [

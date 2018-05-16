@@ -51,12 +51,28 @@ class Template
 
     private function getDomainRecords(\pm_Domain $domain)
     {
-        return (new DomainDns($domain))->getRecords();
+        $records = (new DomainDns($domain))->getRecords();
+        foreach ($records as $record) {
+            switch ($record->type) {
+                case 'CNAME':
+                case 'NS':
+                case 'MX':
+                case 'SRV':
+                    if (isset($record->pointsTo)) {
+                        $record->pointsTo = rtrim($record->pointsTo, '.');
+                    }
+                    if (isset($record->target)) {
+                        $record->target = rtrim($record->target, '.');
+                    }
+                    break;
+            }
+        }
+        return $records;
     }
 
     private function prepareRecord(\stdClass $record, array $parameters)
     {
-        $keys = ['host', 'pointsTo', 'data'];
+        $keys = ['host', 'pointsTo', 'target', 'data'];
         foreach ($parameters as $variable => $value) {
             foreach ($keys as $key) {
                 if (isset($record->{$key})) {
@@ -64,14 +80,68 @@ class Template
                 }
             }
         }
+
+        switch ($record->type) {
+            case 'MX':
+                if (isset($record->pointsTo)) {
+                    $record->target = $record->pointsTo;
+                } elseif (isset($record->target)) {
+                    $record->pointsTo = $record->target;
+                }
+                if (empty($record->priority)) {
+                    $record->priority = '0';
+                }
+                break;
+            case 'TXT':
+                if (isset($record->data)) {
+                    $record->target = $record->data;
+                } elseif (isset($record->target)) {
+                    $record->data = $record->target;
+                }
+                break;
+            case 'SRV':
+                if (isset($record->name)) {
+                    $record->service = $record->name;
+                } elseif (isset($record->service)) {
+                    $record->name = $record->service;
+                }
+                if (isset($record->pointsTo)) {
+                    $record->target = $record->pointsTo;
+                } elseif (isset($record->target)) {
+                    $record->pointsTo = $record->target;
+                }
+                break;
+        }
         return $record;
     }
 
     private function isExist(array $domainRecords, \stdClass $record)
     {
-        $keys = ['type', 'host', 'pointsTo', 'data'];
         foreach ($domainRecords as $domainRecord) {
-            $matches = true;
+            $matches = $domainRecord->type === $record->type && $domainRecord->host === $record->host;
+            if (!$matches) {
+                continue;
+            }
+            switch ($domainRecord->type) {
+                case 'A':
+                case 'AAAA':
+                case 'CNAME':
+                case 'NS':
+                    $keys = ['pointsTo'];
+                    break;
+                case 'MX':
+                    $keys = ['pointsTo', 'target', 'priority'];
+                    break;
+                case 'TXT':
+                    $keys = ['data', 'target'];
+                    break;
+                case 'SRV':
+                    $keys = ['pointsTo', 'target', 'name', 'service', 'protocol', 'priority', 'weight', 'port'];
+                    break;
+                default:
+                    return false;
+            }
+
             foreach ($keys as $key) {
                 $domainValue = isset($domainRecord->{$key}) ? $domainRecord->{$key} : null;
                 $recordValue = isset($record->{$key}) ? $record->{$key} : null;
