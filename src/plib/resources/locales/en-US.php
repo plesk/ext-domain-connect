@@ -12,6 +12,7 @@ $messages = [
         'hideDetails' => 'Hide details',
         'toRemove' => 'The following records will be removed:',
         'toAdd' => 'The following records will be added:',
+        'nothingToAdd' => 'There are no records to add. The service is already connected.',
         'connectButton' => 'Connect',
         'cancelButton' => 'Cancel',
         'success' => 'The changes were successfully applied to %%domain%%.',

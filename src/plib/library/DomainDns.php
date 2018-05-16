@@ -141,7 +141,7 @@ class DomainDns
                 return [
                     'host' => $this->_convertHost($domainName, $host),
                     'pointsTo' => $value,
-                    'priority' => $opt,
+                    'priority' => (string)(int)$opt,
                     'target' => $value,
                 ];
             case 'TXT':
@@ -155,9 +155,9 @@ class DomainDns
                 $optData = explode(' ', $opt);
                 $serviceHost = implode('.' , array_slice($hostData, 2));
                 return [
-                    'name' => isset($hostData[0]) ? ltrim($hostData[0], '_') : '',
-                    'service' => isset($hostData[0]) ? ltrim($hostData[0], '_') : '',
-                    'protocol' => isset($hostData[1]) ? ltrim($hostData[1], '_') : '',
+                    'name' => isset($hostData[0]) ? $hostData[0] : '',
+                    'service' => isset($hostData[0]) ? $hostData[0] : '',
+                    'protocol' => isset($hostData[1]) ? $hostData[1] : '',
                     'host' => $this->_convertHost($domainName, $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',

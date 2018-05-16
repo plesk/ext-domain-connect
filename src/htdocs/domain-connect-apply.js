@@ -5,7 +5,9 @@
         children = Array.isArray(children) ? children : [children];
         children = children.reduce(function (acc, child) {
             return acc.concat(child);
-        }, []);
+        }, []).filter(function (child) {
+            return !!child;
+        });
 
         var el = document.createElement(tag);
         Object.keys(attr).forEach(function (key) {
@@ -22,12 +24,15 @@
     var render = function (renderTo, elements) {
         elements = elements || [];
         elements = Array.isArray(elements) ? elements : [elements];
+        elements = elements.filter(function (el) {
+            return !!el;
+        });
 
         while (renderTo.firstChild) {
             renderTo.removeChild(renderTo.firstChild);
         }
-        elements.forEach(function (child) {
-            renderTo.appendChild(child);
+        elements.forEach(function (el) {
+            renderTo.appendChild(el);
         });
     };
 
@@ -65,7 +70,7 @@
                 return record.host + ' IN ' + record.type + ' ' + record.data;
             case 'SRV':
                 return (record.name || record.service) + '.' + record.protocol + '.' +
-                    record.host + ' IN SRV ' + (record.pointsTo || record.target) +
+                    record.host + ' IN SRV ' + (record.pointsTo || record.target) + ' ' +
                     record.priority + ' ' + record.weight + ' ' + record.port;
             default:
                 return record.host + ' IN ' + record.type;
@@ -77,22 +82,22 @@
     };
 
     render(app.renderTo, [
-        ce('p', {}, [
+        app.logoUrl ? ce('p', {}, [
             ce('img', {class: "ext-domain-connect--logo", src: app.logoUrl})
-        ]),
+        ]) : null,
         ce('p', {}, lmsg('description', {domain: app.domainName, providerName: app.providerName})),
         ce('p', {}, [
             ce('a', {id: 'ext-domain-connect--details-link'}, lmsg('showDetails'))
         ]),
         ce('div', {id: 'ext-domain-connect--details', class: "hidden"}, [
-            ce('div', {}, [
+            app.changes.toRemove.length ? ce('div', {}, [
                 ce('div', {}, lmsg('toRemove')),
                 ce('ul', {}, app.changes.toRemove.map(renderRecordRow))
-            ]),
-            ce('div', {}, [
+            ]) : null,
+            app.changes.toAdd.length ? ce('div', {}, [
                 ce('div', {}, lmsg('toAdd')),
                 ce('ul', {}, app.changes.toAdd.map(renderRecordRow))
-            ])
+            ]) : lmsg('nothingToAdd')
         ]),
         ce('p', {}, lmsg('action', {providerName: app.providerName})),
         ce('div', {class: "btns-box"}, [
