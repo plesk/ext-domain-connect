@@ -5,16 +5,15 @@
         children = Array.isArray(children) ? children : [children];
         children = children.reduce(function (acc, child) {
             return acc.concat(child);
-        }, []);
+        }, []).filter(function (child) {
+            return !!child;
+        });
 
         var el = document.createElement(tag);
         Object.keys(attr).forEach(function (key) {
             el.setAttribute(key, attr[key]);
         });
         children.forEach(function (child) {
-            if (!child) {
-                return;
-            }
             if (typeof child === 'string') {
                 child = document.createTextNode(child);
             }
@@ -25,12 +24,15 @@
     var render = function (renderTo, elements) {
         elements = elements || [];
         elements = Array.isArray(elements) ? elements : [elements];
+        elements = elements.filter(function (el) {
+            return !!el;
+        });
 
         while (renderTo.firstChild) {
             renderTo.removeChild(renderTo.firstChild);
         }
-        elements.forEach(function (child) {
-            renderTo.appendChild(child);
+        elements.forEach(function (el) {
+            renderTo.appendChild(el);
         });
     };
 
@@ -80,9 +82,9 @@
     };
 
     render(app.renderTo, [
-        ce('p', {}, [
+        app.logoUrl ? ce('p', {}, [
             ce('img', {class: "ext-domain-connect--logo", src: app.logoUrl})
-        ]),
+        ]) : null,
         ce('p', {}, lmsg('description', {domain: app.domainName, providerName: app.providerName})),
         ce('p', {}, [
             ce('a', {id: 'ext-domain-connect--details-link'}, lmsg('showDetails'))
