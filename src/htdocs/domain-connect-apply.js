@@ -134,8 +134,9 @@
         form.submit();
     });
     document.getElementById('ext-domain-connect--cancel').addEventListener('click', function () {
-        if (app.returnUrl) {
-            window.location = app.returnUrl;
+        if (app.redirectUri) {
+            window.location = app.redirectUri +
+                (-1 === app.redirectUri.indexOf('?') ? '?' : '&') + 'error=access_denied&error_description=user_cancel';
         } else {
             window.close();
         }

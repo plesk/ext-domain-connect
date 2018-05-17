@@ -60,8 +60,7 @@ class V2Controller extends pm_Controller_Action
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
             $template->applyChanges($domain, $changes);
-            $this->_status->addInfo(\pm_Locale::lmsg('apply.success', ['domain' => $domainName]));
-            $this->redirect('/', ['prependBase' => false]);
+            $this->forward('success');
         }
 
         $this->view->domainName = $domainName;
@@ -69,6 +68,7 @@ class V2Controller extends pm_Controller_Action
         $this->view->logoUrl = $template->getLogoUrl();
         $this->view->changes = $changes;
         $this->view->locale = \pm_Locale::getSection('apply');
+        $this->view->redirectUri = $this->getRedirectUri($template);
     }
 
     private function checkDomainAccess(\pm_Domain $domain)
@@ -77,4 +77,22 @@ class V2Controller extends pm_Controller_Action
             throw new \pm_Exception("Permission denied");
         }
     }
+
+    private function getRedirectUri(Template $template)
+    {
+        if (!$this->hasParam('redirect_uri')) {
+            return null;
+        }
+        $redirectUri = $this->getParam('redirect_uri');
+        if ($allowedDomain = $template->getRedirectDomain()) {
+            $host = parse_url($redirectUri, PHP_URL_HOST);
+            if ($host === $allowedDomain) {
+                return $redirectUri;
+            }
+        }
+        return null;
+    }
+
+    public function successAction()
+    {}
 }

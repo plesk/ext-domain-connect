@@ -207,4 +207,9 @@ class Template
     {
         return isset($this->data->logoUrl) ? $this->data->logoUrl : '';
     }
+
+    public function getRedirectDomain()
+    {
+        return isset($this->data->syncRedirectDomain) ? $this->data->syncRedirectDomain : '';
+    }
 }
