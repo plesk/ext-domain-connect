@@ -57,6 +57,11 @@ class V2Controller extends pm_Controller_Action
         $this->checkDomainAccess($domain);
 
         $template = new Template($provider, $service);
+        $template->verifySignature(
+            $this->getRequest()->getRequestUri(),
+            $this->getParam('key'),
+            $this->getParam('sig')
+        );
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
             $template->applyChanges($domain, $changes);
