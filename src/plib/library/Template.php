@@ -213,11 +213,13 @@ class Template
         return isset($this->data->syncRedirectDomain) ? $this->data->syncRedirectDomain : '';
     }
 
+    public function isSignatureRequired()
+    {
+        return !empty($this->data->syncPubKeyDomain);
+    }
+
     public function verifySignature($query, $key, $signature)
     {
-        if (!isset($this->data->syncPubKeyDomain)) {
-            return;
-        }
         if (empty($key) || empty($signature)) {
             throw new \pm_Exception('Request signature is required by the template');
         }

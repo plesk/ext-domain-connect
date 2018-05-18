@@ -57,11 +57,14 @@ class V2Controller extends pm_Controller_Action
         $this->checkDomainAccess($domain);
 
         $template = new Template($provider, $service);
-        $template->verifySignature(
-            $this->getRequest()->getRequestUri(),
-            $this->getParam('key'),
-            $this->getParam('sig')
-        );
+        if ($template->isSignatureRequired()) {
+            $template->verifySignature(
+                $this->getRequest()->getRequestUri(),
+                $this->getParam('key'),
+                $this->getParam('sig')
+            );
+        }
+
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
             $template->applyChanges($domain, $changes);
@@ -89,6 +92,11 @@ class V2Controller extends pm_Controller_Action
             return null;
         }
         $redirectUri = $this->getParam('redirect_uri');
+
+        if ($template->isSignatureRequired()) {
+            return $redirectUri;
+        }
+
         if ($allowedDomain = $template->getRedirectDomain()) {
             $host = parse_url($redirectUri, PHP_URL_HOST);
             if ($host === $allowedDomain) {
