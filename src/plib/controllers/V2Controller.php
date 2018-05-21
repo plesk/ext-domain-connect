@@ -68,7 +68,9 @@ class V2Controller extends pm_Controller_Action
         $changes = $template->testRecords($domain, $groups, $parameters);
         if ($this->getRequest()->isPost()) {
             $template->applyChanges($domain, $changes);
+
             $this->forward('success');
+            // render view of successAction using view's variables below
         }
 
         $this->view->domainName = $domainName;
