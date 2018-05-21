@@ -21,25 +21,17 @@ class Dns
         throw new \pm_Exception("Could not find A/AAAA DNS record for {$domainName}.");
     }
 
-    public static function txtRecord($domainName)
+    public static function txtRecords($domainName)
     {
         $dnsRecords = @dns_get_record($domainName, DNS_TXT);
         if (false === $dnsRecords) {
             $error = error_get_last()['message'];
             throw new \pm_Exception("Failed to resolve {$domainName}: {$error}");
         }
-        foreach ($dnsRecords as $record) {
-            if (empty($record['txt'])) {
-                continue;
-            }
-            try {
-                $url = \Zend_Uri_Http::fromString("https://{$record['txt']}");
-            } catch(\Zend_Uri_Exception $e) {
-                // not valid URL
-                continue;
-            }
-            return $record['txt'];
-        }
-        throw new \pm_Exception("Could not find TXT DNS record for {$domainName}.");
+        return array_filter(
+            array_map(function ($record) {
+                return $record['txt'];
+            }, $dnsRecords)
+        );
     }
 }

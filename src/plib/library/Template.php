@@ -207,4 +207,71 @@ class Template
     {
         return isset($this->data->logoUrl) ? $this->data->logoUrl : '';
     }
+
+    public function getRedirectDomain()
+    {
+        return isset($this->data->syncRedirectDomain) ? $this->data->syncRedirectDomain : '';
+    }
+
+    public function isSignatureRequired()
+    {
+        return !empty($this->data->syncPubKeyDomain);
+    }
+
+    public function verifySignature($query, $key, $signature)
+    {
+        if (empty($key) || empty($signature)) {
+            throw new \pm_Exception('Request signature is required by the template');
+        }
+
+        if (false !== ($pos = strpos($query, '?'))) {
+            $query = substr($query, $pos + 1);
+        }
+        $query = preg_replace('/&key=([^&]*|$)/', '', $query);
+        $query = preg_replace('/&sig=([^&]*|$)/', '', $query);
+
+        $pubKeyDomain = "{$key}.{$this->data->syncPubKeyDomain}";
+        $pubKeyRecords = Dns::txtRecords($pubKeyDomain);
+        $publicKey = $this->getPublicKey($pubKeyRecords);
+        $result = openssl_verify($query, base64_decode($signature), $publicKey, OPENSSL_ALGO_SHA256);
+        if (1 !== $result) {
+            throw new \pm_Exception('Signature verification failed');
+        }
+    }
+
+    private function getPublicKey(array $records)
+    {
+        $parts = array_map(function ($record) {
+            $part = [
+                'p' => 0,
+                'a' => 'RS256',
+                't' => 'x509',
+                'd' => '',
+            ];
+            foreach (explode(',', $record) as $option) {
+                list($key, $value) = explode('=', trim($option), 2);
+                $part[$key] = $value;
+            }
+            return $part;
+        }, $records);
+
+        usort($parts, function ($part1, $part2) {
+            return (int)$part1['p'] > (int)$part2['p'] ? 1 : -1;
+        });
+
+        $publicKeyData = join('', array_map(function ($part) {
+            return $part['d'];
+        }, $parts));
+
+        if (empty($publicKeyData)) {
+            throw new \pm_Exception('Could not find public key');
+        }
+
+        $publicKeyData = "-----BEGIN PUBLIC KEY-----\n{$publicKeyData}\n-----END PUBLIC KEY-----";
+        $publicKey = openssl_get_publickey($publicKeyData);
+        if (false === $publicKey) {
+            throw new \pm_Exception('Invalid public key: ' . openssl_error_string());
+        }
+        return $publicKey;
+    }
 }

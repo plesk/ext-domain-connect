@@ -16,7 +16,7 @@ class DomainConnect
     private function getData()
     {
         if (null === $this->urlPrefix) {
-            $this->urlPrefix = Dns::txtRecord("_domainconnect.{$this->domain->getName()}");
+            $this->urlPrefix = $this->fetchUrlPrefix($this->domain->getName());
             \pm_Log::debug("TXT _domainconnect: {$this->urlPrefix}");
         }
         if (null === $this->data) {
@@ -35,6 +35,21 @@ class DomainConnect
             $this->data = \json_decode($response->getBody());
         }
         return $this->data;
+    }
+
+    private function fetchUrlPrefix($domainName)
+    {
+        $dnsRecords = Dns::txtRecords("_domainconnect.{$domainName}");
+        foreach ($dnsRecords as $record) {
+            try {
+                \Zend_Uri_Http::fromString("https://{$record}");
+            } catch(\Zend_Uri_Exception $e) {
+                // not valid URL
+                continue;
+            }
+            return $record;
+        }
+        throw new \pm_Exception("Could not find domain connect URL prefix for {$domainName}.");
     }
 
     public function getSyncUx()

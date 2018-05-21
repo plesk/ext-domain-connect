@@ -1,0 +1,18 @@
+<?php
+// Copyright 1999-2018. Plesk International GmbH.
+$this->headLink()->appendStylesheet(\pm_Context::getBaseUrl() . 'domain-connect.css');
+?>
+<script>
+//<![CDATA[
+(function (app) {
+    Jsw.addStatusMessage('info', app.locale.success.replace('%%domain%%', app.domainName.escapeHTML()));
+    setTimeout(function () {
+        if (app.redirectUri) {
+            window.location = app.redirectUri;
+        } else {
+            window.close();
+        }
+    }, 2000);
+})(<?= json_encode($this->getVars()) ?>);
+//]]>
+</script>
