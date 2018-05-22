@@ -6,6 +6,15 @@ use PleskExt\DomainConnect\Exception\TemplateNotFound;
 
 class V2Controller extends pm_Controller_Action
 {
+    public function init()
+    {
+        parent::init();
+
+        if (!\pm_Config::get('dnsProvider')) {
+            throw new pm_Exception($this->lmsg('exceptions.dnsProviderDisabled'));
+        }
+    }
+
     public function domaintemplatesAction()
     {
         if ($this->isAction('apply')) {
