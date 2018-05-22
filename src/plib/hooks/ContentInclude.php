@@ -10,6 +10,10 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
     public function init()
     {
+        if (!\pm_Config::get('serviceProvider')) {
+            return;
+        }
+
         $request = Zend_Controller_Front::getInstance()->getRequest();
         if (is_null($request)) {
             return;

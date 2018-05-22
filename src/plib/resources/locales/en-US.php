@@ -20,5 +20,6 @@ $messages = [
     'exceptions' => [
         'postRequestRequired' => 'POST request is required.',
         'clientHasNotAccessToDomain' => 'No access to domain.',
+        'dnsProviderDisabled' => 'DNS Provider is disabled by server configuration.',
     ]
 ];

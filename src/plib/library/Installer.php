@@ -14,7 +14,9 @@ class Installer
     public function install()
     {
         \pm_Log::info("Run installation actions");
-        $this->_configureDnsTemplate();
+        if (\pm_Config::get('dnsProvider')) {
+            $this->_configureDnsTemplate();
+        }
     }
 
     /**
