@@ -81,19 +81,24 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
         \pm_Log::debug("Domain {$domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
 
+        $serviceId = \pm_Config::get('webServiceId');
         try {
-            $url = $domainConnect->getApplyTemplateUrl(\pm_Config::get('webServiceId'), [
-                'IP' => reset($hostingIps),
-                'RANDOMTEXT' => 'test', // TODO: remove when "plesk" template will be ready
+            $url = $domainConnect->getApplyTemplateUrl($serviceId, [
+                'ip' => reset($hostingIps),
             ]);
+            $options = $domainConnect->getWindowOptions();
         } catch (\pm_Exception $e) {
             \pm_Log::info($e->getMessage());
             return;
         }
 
+        $specs = implode(',', [
+            "width={$options['width']}",
+            "height={$options['height']}",
+        ]);
         $message = \pm_Locale::lmsg('message.connect', [
             'domain' => $domain->getDisplayName(),
-            'url' => "javascript:window.open('{$url}', '', 'width=750,height=750');",
+            'url' => $this->escapeHTML("javascript:window.open({$this->jsEscape($url)}, '', {$this->jsEscape($specs)});"),
         ]);
         $this->warnings[] = [$domain->getId(), $message];
     }
@@ -110,9 +115,18 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     public function getJsOnReadyContent()
     {
         return implode("\n", array_map(function($warning) {
-            list($domainId, $warningMsg) = $warning;
-            $message = \Plesk_Base_Utils_String::safeForJs($warningMsg);
-            return "PleskExt.DomainConnect.warnAboutDomainResolvingIssue($domainId, '$message');";
+            list($domainId, $message) = $warning;
+            return "PleskExt.DomainConnect.warnAboutDomainResolvingIssue({$this->jsEscape($domainId)}, {$this->jsEscape($message)});";
         }, $this->warnings));
+    }
+
+    private function escapeHTML($data)
+    {
+        return htmlspecialchars($data);
+    }
+
+    private function jsEscape($data)
+    {
+        return json_encode($data);
     }
 }

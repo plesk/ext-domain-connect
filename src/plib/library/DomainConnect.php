@@ -86,4 +86,14 @@ class DomainConnect
 
         return 'true' === $this->domain->getSetting('enabled');
     }
+
+    public function getWindowOptions()
+    {
+        $data = $this->getData();
+
+        return [
+            'width' => isset($data->width) ? $data->width : 750,
+            'height' => isset($data->height) ? $data->height : 750,
+        ];
+    }
 }
