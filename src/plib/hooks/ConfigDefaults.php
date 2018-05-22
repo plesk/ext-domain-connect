@@ -9,8 +9,8 @@ class Modules_DomainConnect_ConfigDefaults extends pm_Hook_ConfigDefaults
             'serviceProvider' => true,
             'dnsProvider' => true,
             'newDomainsOnly' => true,
-            'providerId' => 'exampleservice.domainconnect.org',  // TODO: replace w/ "plesk"
-            'webServiceId' => 'template1', // TODO: replace w/ "web"
+            'providerId' => 'plesk',
+            'webServiceId' => 'web',
         ];
     }
 }
