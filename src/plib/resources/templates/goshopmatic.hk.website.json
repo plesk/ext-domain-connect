@@ -3,7 +3,7 @@
    "providerName":"Shopmatic",
    "serviceId":"website",
    "serviceName":"Shopmatic Site",
-   "logoUrl":"https://domainconnect.org/wp-content/uploads/2016/07/shopmatic-300x81.png",
+   "logoUrl":"/modules/domain-connect/logos/shopmatic-300x81.png",
    "description":"Enables a domain to work with Shopmatic",
    "variableDescription":"v1 is domain name being configured to work with shopmatic. v2 is the shopmatic hosted name",
    "records":[  
