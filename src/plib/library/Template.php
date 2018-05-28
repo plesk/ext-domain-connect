@@ -101,9 +101,9 @@ class Template
                 break;
             case 'SRV':
                 if (isset($record->name)) {
-                    $record->service = $record->name;
-                } elseif (isset($record->service)) {
-                    $record->name = $record->service;
+                    $record->host = $record->name;
+                } elseif (isset($record->host)) {
+                    $record->name = $record->host;
                 }
                 if (isset($record->pointsTo)) {
                     $record->target = $record->pointsTo;
@@ -136,7 +136,7 @@ class Template
                     $keys = ['data', 'target'];
                     break;
                 case 'SRV':
-                    $keys = ['pointsTo', 'target', 'name', 'service', 'protocol', 'priority', 'weight', 'port'];
+                    $keys = ['pointsTo', 'target', 'name', 'host', 'service', 'protocol', 'priority', 'weight', 'port'];
                     break;
                 default:
                     return false;
