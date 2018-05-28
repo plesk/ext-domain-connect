@@ -63,7 +63,7 @@ class DomainDns
      */
     protected function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
     {
-        if ('@' == $record->host) {
+        if ('@' === $record->host) {
             $host = '';
         } else {
             $host = $record->host;
@@ -77,7 +77,7 @@ class DomainDns
                 break;
             case 'CNAME':
             case 'NS':
-                $value = '@' == $record->pointsTo ? $domain->getName() : $record->pointsTo;
+                $value = '@' === $record->pointsTo ? $domain->getName() : $record->pointsTo;
                 break;
             case 'MX':
                 $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
@@ -87,8 +87,9 @@ class DomainDns
                 $value = $this->_getRecordValueByKeys($record, ['data', 'target']);
                 break;
             case 'SRV':
-                $srvName = $this->_getRecordValueByKeys($record, ['name', 'service']);
-                $host = rtrim("{$srvName}.{$record->protocol}.{$host}", '.');
+                $host = $this->_getRecordValueByKeys($record, ['name', 'host']);
+                $host = '@' === $host ? '' : $host;
+                $host = rtrim("{$record->service}.{$record->protocol}.{$host}", '.');
                 $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
                 $opt = "{$record->priority} {$record->weight} {$record->port}";
                 break;
@@ -155,9 +156,9 @@ class DomainDns
                 $optData = explode(' ', $opt);
                 $serviceHost = implode('.' , array_slice($hostData, 2));
                 return [
-                    'name' => isset($hostData[0]) ? $hostData[0] : '',
                     'service' => isset($hostData[0]) ? $hostData[0] : '',
                     'protocol' => isset($hostData[1]) ? $hostData[1] : '',
+                    'name' => $this->_convertHost($domainName, $serviceHost),
                     'host' => $this->_convertHost($domainName, $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',

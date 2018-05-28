@@ -69,8 +69,8 @@
             case 'TXT':
                 return record.host + ' IN ' + record.type + ' ' + record.data;
             case 'SRV':
-                return (record.name || record.service) + '.' + record.protocol + '.' +
-                    record.host + ' IN SRV ' + (record.pointsTo || record.target) + ' ' +
+                return record.service + '.' + record.protocol + '.' + (record.name || record.host) +
+                    ' IN SRV ' + (record.pointsTo || record.target) + ' ' +
                     record.priority + ' ' + record.weight + ' ' + record.port;
             default:
                 return record.host + ' IN ' + record.type;
