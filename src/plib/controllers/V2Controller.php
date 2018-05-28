@@ -92,7 +92,7 @@ class V2Controller extends pm_Controller_Action
 
     private function checkDomainAccess(\pm_Domain $domain)
     {
-        if (!pm_Session::getClient()->hasAccessToDomain($domain)) {
+        if (!pm_Session::getClient()->hasAccessToDomain($domain->getId())) {
             throw new \pm_Exception("Permission denied");
         }
     }
