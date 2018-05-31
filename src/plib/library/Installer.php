@@ -48,7 +48,7 @@ class Installer
             $dnsRecordInfo = $apiClient->dns()->create([
                 'type' => 'TXT',
                 'host' => "_domainconnect",
-                'value' => "domainconnect.plesk.space/host/<hostname>/port/8443",
+                'value' => "domainconnect.plesk.com/host/<hostname>/port/8443",
             ]);
         } catch (\Exception $e) {
             if (1007 == $e->getCode()) {
