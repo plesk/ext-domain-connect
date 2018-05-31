@@ -62,7 +62,7 @@ class DomainConnect
         $providerId = \pm_Config::get('providerId');
         $properties = array_merge([
             'domain' => $this->domain->getName(),
-            'providerName' => "Plesk",
+            'providerName' => \pm_Config::get('providerName'),
         ], $properties);
         $properties = \http_build_query($properties);
         return "{$this->getSyncUx()}/v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
