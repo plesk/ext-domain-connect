@@ -41,10 +41,12 @@ class Template
                 continue;
             }
             $changes['toAdd'][] = $record;
-            $changes['toRemove'] = array_merge(
-                $changes['toRemove'],
-                $this->getConflicts($domainRecords, $record)
-            );
+            foreach ($this->getConflicts($domainRecords, $record) as $conflictRecord) {
+                if ($this->isExist($changes['toRemove'], $conflictRecord)) {
+                    continue;
+                }
+                $changes['toRemove'][] = $conflictRecord;
+            }
         }
         return $changes;
     }
