@@ -48,7 +48,7 @@ class Installer
             $dnsRecordInfo = $apiClient->dns()->create([
                 'type' => 'TXT',
                 'host' => "_domainconnect",
-                'value' => "domainconnect.plesk.com/host/<hostname>/port/8443",
+                'value' => "domainconnect.plesk.com/host/{$this->getPleskHost()}/port/{$this->getPleskPort()}",
             ]);
         } catch (\Exception $e) {
             if (1007 == $e->getCode()) {
@@ -84,5 +84,20 @@ class Installer
             \pm_Log::err("Unable to remove record #{$dnsTemplateRecordId} from Plesk DNS template: {$e->getMessage()}");
             \pm_Log::debug($e);
         }
+    }
+
+    private function getPleskHost()
+    {
+        $apiClient = new Api\InternalClient();
+        $hostname = $apiClient->server()->getGeneralInfo()->serverName;
+        if (checkdnsrr($hostname, 'A') || checkdnsrr($hostname, 'AAAA')) {
+            return '<hostname>';
+        }
+        return '<ip>';
+    }
+
+    private function getPleskPort()
+    {
+        return '8443';
     }
 }
