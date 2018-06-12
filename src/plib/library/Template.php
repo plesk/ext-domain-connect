@@ -4,6 +4,8 @@ namespace PleskExt\DomainConnect;
 
 class Template
 {
+    const SUPPORTED_RECORDS = ['A', 'AAAA', 'CNAME', 'NS', 'MX', 'SRV', 'TXT'];
+
     private $data;
 
     public function __construct($provider, $service)
@@ -32,8 +34,11 @@ class Template
             'toRemove' => [],
         ];
         foreach ((array)$this->data->records as $record) {
-            if (!empty($groups) && (!isset($record->groupId) || !in_array($record->groupId, $groups))) {
+            if (!empty($groups) && (!isset($record->groupId) || !in_array($record->groupId, $groups, true))) {
                 continue;
+            }
+            if (!in_array($record->type, self::SUPPORTED_RECORDS, true)) {
+                throw new Exception\RecordNotSupported("Record type '{$record->type}' is not supported");
             }
             $record = $this->prepareRecord($record, $parameters);
 
