@@ -81,6 +81,9 @@ class Template
             }
         }
 
+        if (empty($record->host)) {
+            $record->host = '@';
+        }
         switch ($record->type) {
             case 'MX':
                 if (isset($record->pointsTo)) {
@@ -90,6 +93,8 @@ class Template
                 }
                 if (empty($record->priority)) {
                     $record->priority = '0';
+                } else {
+                    $record->priority = (string)$record->priority;
                 }
                 break;
             case 'TXT':
