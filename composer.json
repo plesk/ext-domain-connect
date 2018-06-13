@@ -8,11 +8,20 @@
       "PleskExt\\DomainConnect\\": "modules/domain-connect/library/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "PleskExt\\DomainConnect\\": "src/plib/library/"
+    }
+  },
   "require": {
     "php": "^5.6|^7.0|^7.1",
     "plesk/api-php-lib": "@dev"
   },
   "require-dev": {
-    "plesk/pm-api-stubs": "^17.8.4"
+    "plesk/pm-api-stubs": "^17.8.4",
+    "phpunit/phpunit": "^7.2"
+  },
+  "scripts": {
+    "test": "phpunit tests/"
   }
 }

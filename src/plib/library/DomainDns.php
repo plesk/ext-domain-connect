@@ -61,7 +61,7 @@ class DomainDns
      * @param \stdClass $record
      * @return array
      */
-    protected function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
+    private function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
     {
         if ('@' === $record->host) {
             $host = '';
@@ -80,17 +80,16 @@ class DomainDns
                 $value = '@' === $record->pointsTo ? $domain->getName() : $record->pointsTo;
                 break;
             case 'MX':
-                $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
+                $value = $record->pointsTo;
                 $opt = $record->priority;
                 break;
             case 'TXT':
-                $value = $this->_getRecordValueByKeys($record, ['data', 'target']);
+                $value = $record->data;
                 break;
             case 'SRV':
-                $host = $this->_getRecordValueByKeys($record, ['name', 'host']);
-                $host = '@' === $host ? '' : $host;
+                $host = '@' === $record->name || '' === $record->name ? '' : $record->name;
                 $host = rtrim("{$record->service}.{$record->protocol}.{$host}", '.');
-                $value = $this->_getRecordValueByKeys($record, ['pointsTo', 'target']);
+                $value = $record->target;
                 $opt = "{$record->priority} {$record->weight} {$record->port}";
                 break;
         }
@@ -103,27 +102,17 @@ class DomainDns
         ];
     }
 
-    protected function _getRecordValueByKeys(\stdClass $record, array $keys)
-    {
-        foreach ($keys as $key) {
-            if (isset($record->$key)) {
-                return $record->$key;
-            }
-        }
-        return '';
-    }
-
     /**
      * Return DNS record data in Domain Connect format
      *
      * @param string $type
-     * @param string$host
+     * @param string $host
      * @param string $value
-     * @param $opt
+     * @param string $opt
      * @param string $domainName
      * @return array
      */
-    protected function _getDomainConnectRecordData($domainName, $type, $host, $value, $opt)
+    private function _getDomainConnectRecordData($domainName, $type, $host, $value, $opt)
     {
         switch ($type) {
             case 'A':
@@ -143,27 +132,23 @@ class DomainDns
                     'host' => $this->_convertHost($domainName, $host),
                     'pointsTo' => $value,
                     'priority' => (string)(int)$opt,
-                    'target' => $value,
                 ];
             case 'TXT':
                 return [
                     'host' => $this->_convertHost($domainName, $host),
                     'data' => $value,
-                    'target' => $value,
                 ];
             case 'SRV':
                 $hostData = explode('.', $host);
                 $optData = explode(' ', $opt);
-                $serviceHost = implode('.' , array_slice($hostData, 2));
+                $serviceHost = implode('.', array_slice($hostData, 2));
                 return [
                     'service' => isset($hostData[0]) ? $hostData[0] : '',
                     'protocol' => isset($hostData[1]) ? $hostData[1] : '',
                     'name' => $this->_convertHost($domainName, $serviceHost),
-                    'host' => $this->_convertHost($domainName, $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',
                     'port' => isset($optData[2]) ? $optData[2] : '',
-                    'pointsTo' => $value,
                     'target' => $value,
                 ];
             default:
@@ -182,13 +167,13 @@ class DomainDns
      * @param $rawHost
      * @return string
      */
-    protected function _convertHost($domainName, $rawHost)
+    private function _convertHost($domainName, $rawHost)
     {
         $host = $rawHost;
         $pos = strrpos($rawHost, $domainName);
         if (0 === $pos) {
             $host = '@';
-        } else if (false !== $pos) {
+        } elseif (false !== $pos) {
             $host = substr($host, 0, $pos - 1);
         }
         return $host;
