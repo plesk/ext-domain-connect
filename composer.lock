@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/plesk/api-php-lib.git",
-                "reference": "78753ab427ec117543092d13222d402001ba80bc"
+                "reference": "e3712f7e6ef9c29bb82ad61c79f0a24643cc9b5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/plesk/api-php-lib/zipball/78753ab427ec117543092d13222d402001ba80bc",
-                "reference": "78753ab427ec117543092d13222d402001ba80bc",
+                "url": "https://api.github.com/repos/plesk/api-php-lib/zipball/e3712f7e6ef9c29bb82ad61c79f0a24643cc9b5d",
+                "reference": "e3712f7e6ef9c29bb82ad61c79f0a24643cc9b5d",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 }
             ],
             "description": "PHP object-oriented library for Plesk XML-RPC API",
-            "time": "2018-01-10T01:52:25+00:00"
+            "time": "2018-06-13T08:22:58+00:00"
         }
     ],
     "packages-dev": [
@@ -61,12 +61,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/plesk/pm-api-stubs.git",
-                "reference": "020605e993b1321b6829bef5bf797cf48cffca6d"
+                "reference": "89427a7e75a702c5d03458e17150c66fd3658c3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/plesk/pm-api-stubs/zipball/020605e993b1321b6829bef5bf797cf48cffca6d",
-                "reference": "020605e993b1321b6829bef5bf797cf48cffca6d",
+                "url": "https://api.github.com/repos/plesk/pm-api-stubs/zipball/89427a7e75a702c5d03458e17150c66fd3658c3a",
+                "reference": "89427a7e75a702c5d03458e17150c66fd3658c3a",
                 "shasum": ""
             },
             "require": {
@@ -133,6 +133,7 @@
                 "ZF1",
                 "framework"
             ],
+            "abandoned": "zendframework/zendframework",
             "time": "2016-09-08T14:50:34+00:00"
         }
     ],
