@@ -4,8 +4,6 @@ namespace PleskExt\DomainConnect;
 
 class Template
 {
-    const SUPPORTED_RECORDS = ['A', 'AAAA', 'CNAME', 'NS', 'MX', 'SRV', 'TXT'];
-
     private $data;
 
     public function __construct($provider, $service)
@@ -33,15 +31,7 @@ class Template
             'toAdd' => [],
             'toRemove' => [],
         ];
-        foreach ((array)$this->data->records as $record) {
-            if (!empty($groups) && (!isset($record->groupId) || !in_array($record->groupId, $groups, true))) {
-                continue;
-            }
-            if (!in_array($record->type, self::SUPPORTED_RECORDS, true)) {
-                throw new Exception\RecordNotSupported("Record type '{$record->type}' is not supported");
-            }
-            $record = $this->prepareRecord($record, $parameters);
-
+        foreach ($this->getTemplateRecords($groups, $parameters) as $record) {
             if ($this->isExist($domainRecords, $record)) {
                 continue;
             }
@@ -56,6 +46,20 @@ class Template
         return $changes;
     }
 
+    public function getTemplateRecords(array $groups = [], array $parameters = [])
+    {
+        $records = [];
+        foreach ((array)$this->data->records as $record) {
+            if (!empty($groups) && (!isset($record->groupId) || !in_array($record->groupId, $groups, true))) {
+                continue;
+            }
+            $record = $this->prepareRecord($record, $parameters);
+            $this->validateRecord($record);
+            $records[] = $record;
+        }
+        return $records;
+    }
+
     private function getDomainRecords(\pm_Domain $domain)
     {
         $records = (new DomainDns($domain))->getRecords();
@@ -64,10 +68,11 @@ class Template
                 case 'CNAME':
                 case 'NS':
                 case 'MX':
-                case 'SRV':
                     if (isset($record->pointsTo)) {
                         $record->pointsTo = rtrim($record->pointsTo, '.');
                     }
+                    break;
+                case 'SRV':
                     if (isset($record->target)) {
                         $record->target = rtrim($record->target, '.');
                     }
@@ -77,8 +82,43 @@ class Template
         return $records;
     }
 
+    private function validateRecord($record)
+    {
+        switch ($record->type) {
+            case 'A':
+            case 'AAAA':
+            case 'CNAME':
+            case 'NS':
+                $requiredKeys = ['host', 'pointsTo', 'ttl'];
+                break;
+            case 'MX':
+                $requiredKeys = ['host', 'pointsTo', 'priority', 'ttl'];
+                break;
+            case 'TXT':
+                $requiredKeys = ['host', 'data', 'ttl'];
+                break;
+            case 'SRV':
+                $requiredKeys = ['name', 'target', 'protocol', 'service', 'priority', 'weight', 'port', 'ttl'];
+                break;
+            default:
+                throw new Exception\RecordNotSupported("Record type '{$record->type}' is not supported");
+        }
+
+        foreach ($requiredKeys as $key) {
+            if (!isset($record->{$key})) {
+                throw new \pm_Exception("Required field '{$key}' is missing in {$record->type} record");
+            }
+        }
+    }
+
     private function prepareRecord(\stdClass $record, array $parameters)
     {
+        switch ($record->type) {
+            case 'MX':
+                $record->priority = isset($record->priority) ? (string)$record->priority : null;
+                break;
+        }
+
         $keys = ['host', 'pointsTo', 'target', 'data'];
         foreach ($parameters as $variable => $value) {
             foreach ($keys as $key) {
@@ -87,66 +127,35 @@ class Template
                 }
             }
         }
-
-        switch ($record->type) {
-            case 'MX':
-                if (isset($record->pointsTo)) {
-                    $record->target = $record->pointsTo;
-                } elseif (isset($record->target)) {
-                    $record->pointsTo = $record->target;
-                }
-                if (empty($record->priority)) {
-                    $record->priority = '0';
-                }
-                break;
-            case 'TXT':
-                if (isset($record->data)) {
-                    $record->target = $record->data;
-                } elseif (isset($record->target)) {
-                    $record->data = $record->target;
-                }
-                break;
-            case 'SRV':
-                if (isset($record->name)) {
-                    $record->host = $record->name;
-                } elseif (isset($record->host)) {
-                    $record->name = $record->host;
-                }
-                if (isset($record->pointsTo)) {
-                    $record->target = $record->pointsTo;
-                } elseif (isset($record->target)) {
-                    $record->pointsTo = $record->target;
-                }
-                break;
-        }
         return $record;
     }
 
     private function isExist(array $domainRecords, \stdClass $record)
     {
+        switch ($record->type) {
+            case 'A':
+            case 'AAAA':
+            case 'CNAME':
+            case 'NS':
+                $keys = ['host', 'pointsTo'];
+                break;
+            case 'MX':
+                $keys = ['host', 'pointsTo', 'priority'];
+                break;
+            case 'TXT':
+                $keys = ['host', 'data'];
+                break;
+            case 'SRV':
+                $keys = ['name', 'target', 'protocol', 'service', 'priority', 'weight', 'port'];
+                break;
+            default:
+                return false;
+        }
+
         foreach ($domainRecords as $domainRecord) {
-            $matches = $domainRecord->type === $record->type && $domainRecord->host === $record->host;
+            $matches = $domainRecord->type === $record->type;
             if (!$matches) {
                 continue;
-            }
-            switch ($domainRecord->type) {
-                case 'A':
-                case 'AAAA':
-                case 'CNAME':
-                case 'NS':
-                    $keys = ['pointsTo'];
-                    break;
-                case 'MX':
-                    $keys = ['pointsTo', 'target', 'priority'];
-                    break;
-                case 'TXT':
-                    $keys = ['data', 'target'];
-                    break;
-                case 'SRV':
-                    $keys = ['pointsTo', 'target', 'name', 'host', 'service', 'protocol', 'priority', 'weight', 'port'];
-                    break;
-                default:
-                    return false;
             }
 
             foreach ($keys as $key) {
@@ -175,7 +184,6 @@ class Template
                     }
                     break;
                 case 'MX':
-                case 'SRV':
                     if ($domainRecord->type === $record->type
                         && $domainRecord->host === $record->host) {
                         $conflicts[] = $domainRecord;
@@ -189,6 +197,13 @@ class Template
                         $conflicts[] = $domainRecord;
                     }
                     break;
+                case 'SRV':
+                    if ($domainRecord->type === $record->type
+                        && $domainRecord->name === $record->name
+                        && $domainRecord->protocol === $record->protocol
+                        && $domainRecord->service === $record->service) {
+                        $conflicts[] = $domainRecord;
+                    }
             }
         }
         return $conflicts;

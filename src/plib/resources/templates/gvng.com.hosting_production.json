@@ -3,6 +3,7 @@
    "providerName":"GVNG",
    "serviceId": "hosting_production",
    "serviceName":"Hosting",
+   "version": 1,
    "logoUrl":"/modules/domain-connect/logos/gvng-300x115.png",
    "description":"Enables web hosting for GVNG sites",
    "variableDescription":"",

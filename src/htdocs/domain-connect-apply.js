@@ -62,16 +62,16 @@
             case 'A':
             case 'AAAA':
             case 'CNAME':
+            case 'NS':
                 return record.host + ' IN ' + record.type + ' ' + record.pointsTo;
             case 'MX':
-                return record.host + ' IN ' + record.type + ' ' + (record.pointsTo || record.target) +
+                return record.host + ' IN ' + record.type + ' ' + record.pointsTo +
                     (record.priority ? ' (' + record.priority + ')' : '');
             case 'TXT':
                 return record.host + ' IN ' + record.type + ' ' + record.data;
             case 'SRV':
-                return record.service + '.' + record.protocol + '.' + (record.name || record.host) +
-                    ' IN SRV ' + (record.pointsTo || record.target) + ' ' +
-                    record.priority + ' ' + record.weight + ' ' + record.port;
+                return record.service + '.' + record.protocol + '.' + record.name + ' IN SRV ' +
+                    record.target + ' ' + record.priority + ' ' + record.weight + ' ' + record.port;
             default:
                 return record.host + ' IN ' + record.type;
         }

@@ -1,8 +1,9 @@
 {
-   "providerId":"WPEngine.com",
+   "providerId":"wpengine.com",
    "providerName":"WPEngine.com",
    "serviceId":"cname",
    "serviceName":"WP Engine Digital Experience Platform",
+   "versoin": 1,
    "logoUrl":"https://wpengine.com/logo.png",
    "description":"Configure domain record for CNAME entry.",
    "syncBlock":false,
