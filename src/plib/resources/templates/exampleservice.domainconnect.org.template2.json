@@ -3,6 +3,7 @@
    "providerName":"Example Domain Connect Service",
    "serviceId":"template2",
    "serviceName":"Stateless Hosting Secondary",
+   "version": 1,
    "syncPubKeyDomain" : "exampleservice.domainconnect.org",
    "syncRedirectDomain": "exampleservice.domainconnect.org",
    "logoUrl":"/modules/domain-connect/logos/cropped-Domain_Connect3.png",

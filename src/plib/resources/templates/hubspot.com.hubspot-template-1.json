@@ -1,22 +1,18 @@
 {  
    "providerId":"hubspot.com",
    "providerName":"HubSpot",
-   "serviceId":"site",
+   "serviceId":"hubspot-template-1",
    "serviceName":"HubSpot Site",
+   "version": 1,
    "logoUrl":"/modules/domain-connect/logos/HubSpot-768x223.png",
    "description":"Enables a domain to work with HubSpot",
-   "variableDescription":"v1 is the customer id.",
+   "syncBlock": true,
+   "variableDescription":"Note: This template will be updated, as the variable in a host needs to evolve.",
    "records":[  
       {  
          "type":"CNAME",
-         "host":"@",
-         "pointsTo":"%v1%.sites.hubspot.net",
-         "ttl":"600"
-      },
-      {  
-         "type":"CNAME",
-         "host":"@",
-         "pointsTo":"%v1%.hubspot.net",
+         "host":"%SUBDOMAIN%",
+         "pointsTo":"%DESTINATION%",
          "ttl":"600"
       }
    ]

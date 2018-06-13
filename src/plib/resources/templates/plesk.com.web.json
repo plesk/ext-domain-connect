@@ -3,6 +3,7 @@
   "providerName":"Plesk",
   "serviceId":"web",
   "serviceName":"Web Hosting on Plesk",
+  "version": 1,
   "warnPhishing": true,
   "logoUrl":"/modules/domain-connect/logos/plesk_logo_144x144_black.png",
   "description":"Enables a web hosting on the server powered by Plesk.",

@@ -3,6 +3,7 @@
    "providerName":"About Me",
    "serviceId":"website",
    "serviceName":"Hosting",
+   "version": 1,
    "logoUrl":"/modules/domain-connect/logos/about.me_-300x53.png",
    "description":"Enables web hosting for about me domains.",
    "variableDescription":"",

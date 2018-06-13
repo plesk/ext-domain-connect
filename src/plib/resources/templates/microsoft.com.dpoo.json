@@ -3,6 +3,7 @@
   "providerName": "Microsoft",
   "serviceId": "DPOO",
   "serviceName": "Domain proof of ownership for configuring Microsoft services",
+  "version": 1,
   "logoUrl": "/modules/domain-connect/logos/microsoft-300x89.jpg",
   "description": "Verifies domain ownership for further configuration of Microsoft services",
   "variableDescription": "Self explanatory in the variable names.",
