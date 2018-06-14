@@ -23,16 +23,19 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         $action = $request->getActionName();
 
         switch ("{$module}/{$controller}/${action}") {
-            case 'smb//' :
-            case 'smb/web/view' :
-            case 'smb/web/overview' :
+            case 'smb/web/view':
+            case 'smb/web/overview':
                 // "Websites & Domains" page
                 $this->getWebsitesAndDomainsMessages();
                 break;
-            case 'admin/domain/list' :
-            case 'admin/subscription/list' :
+            case 'admin/domain/list':
+            case 'admin/subscription/list':
                 // Admin domains/subscriptions list
                 $this->getDomainsListMessages();
+                break;
+            case 'smb/dns-zone/records-list':
+            case 'smb/dns-zone/who-is':
+                $this->addDnsSettingsMessages($request->getParam('id'));
                 break;
             default:
                 return;
@@ -57,11 +60,20 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
     }
 
-    private function handleDomain(\pm_Domain $domain)
+    public function addDnsSettingsMessages($idParam)
+    {
+        list($type, $domainId) = explode(':', $idParam, 2);
+        if (in_array($type, ['d', 's']) && is_numeric($domainId)) {
+            $domain = \pm_Domain::getByDomainId($domainId);
+            $this->handleDomain($domain, true);
+        }
+    }
+
+    private function handleDomain(\pm_Domain $domain, $permanentMessage = false)
     {
         $domainConnect = new DomainConnect($domain);
 
-        if (!$domainConnect->isEnabled()) {
+        if (!$permanentMessage && !$domainConnect->isEnabled()) {
             return;
         }
         if (!$domain->hasHosting()) {
@@ -100,7 +112,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             'domain' => $domain->getDisplayName(),
             'url' => $this->escapeHTML("javascript:window.open({$this->jsEscape($url)}, '', {$this->jsEscape($specs)});"),
         ]);
-        $this->warnings[] = [$domain->getId(), $message];
+        $closable = !$permanentMessage;
+        $this->warnings[] = [$domain->getId(), $message, $closable];
     }
 
     public function getHeadContent()
@@ -115,8 +128,10 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     public function getJsOnReadyContent()
     {
         return implode("\n", array_map(function($warning) {
-            list($domainId, $message) = $warning;
-            return "PleskExt.DomainConnect.warnAboutDomainResolvingIssue({$this->jsEscape($domainId)}, {$this->jsEscape($message)});";
+            list($domainId, $message, $closable) = $warning;
+            return "PleskExt.DomainConnect.addConnectionMessage(" .
+                "{$this->jsEscape($domainId)}, {$this->jsEscape($message)}, {$this->jsEscape($closable)}" .
+            ");";
         }, $this->warnings));
     }
 

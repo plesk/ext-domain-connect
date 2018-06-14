@@ -4,7 +4,7 @@
 $messages = [
     'title' => 'Domain Connect',
     'description' => 'Connecting domains to your webspace is not always easy - especially for less technical people. The Plesk Domain Connect Extension solves this issue by automatically configuring DNS for your website. Just add your domain name and let Plesk do the rest for you.',
-    'message.connect' => 'Your domain <strong>%%domain%%</strong> seems not to be resolving to the IP address of the current Plesk instance. The DNS settings can be configured automatically using Domain Connect. <a href="%%url%%">Click here to initialise the proper configuration</a>.',
+    'message.connect' => 'The DNS settings of your domain <strong>%%domain%%</strong> can be configured automatically using Domain Connect. <a href="%%url%%">Click here to connect the domain to Plesk</a>.',
     'apply' => [
         'description' => 'Connecting <strong>%%domain%%</strong> to <strong>%%providerName%%</strong> requires us to change several DNS records.',
         'action' => 'Connect to <strong>%%providerName%%</strong> and change your domain\'s DNS records?',
