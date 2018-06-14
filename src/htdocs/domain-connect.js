@@ -3,7 +3,7 @@
 Jsw.namespace('PleskExt.DomainConnect');
 
 PleskExt.DomainConnect.warnAboutDomainResolvingIssue = function(domainId, message) {
-    Jsw.addStatusMessage('warning', message, {
+    Jsw.addStatusMessage('info', message, {
         closable: true,
         onClose: function() {
             $(this).up('.msg-box').remove();
