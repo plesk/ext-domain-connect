@@ -6,6 +6,13 @@ use \PleskX\Api;
 
 class Installer
 {
+    private $apiClient;
+
+    public function __construct(Api\Client $apiClient = null)
+    {
+        $this->apiClient = $apiClient ?: new Api\InternalClient();
+    }
+
     /**
      * Perform module installation activities
      */
@@ -31,21 +38,20 @@ class Installer
      */
     private function configureDnsTemplate()
     {
-        $apiClient = new Api\InternalClient();
-        if (!$this->findDnsTemplateRecord($apiClient)) {
-            $this->addDnsTemplateRecord($apiClient);
+        if (!$this->findDnsTemplateRecord()) {
+            $this->addDnsTemplateRecord();
         }
     }
 
-    private function findDnsTemplateRecord(Api\InternalClient $apiClient)
+    private function findDnsTemplateRecord()
     {
-        if (!method_exists($apiClient, 'dnsTemplate')) {
+        if (!method_exists($this->apiClient, 'dnsTemplate')) {
             \pm_Log::debug("DNS Template operator is not supported");
             return null;
         }
 
         try {
-            $dnsRecords = $apiClient->dnsTemplate()->getAll();
+            $dnsRecords = $this->apiClient->dnsTemplate()->getAll();
         } catch (\Exception $e) {
             \pm_Log::err($e);
             return null;
@@ -59,14 +65,11 @@ class Installer
         return null;
     }
 
-    /**
-     * Add record into DNS template; ignore anny errors occurred
-     *
-     * @param Api\InternalClient $apiClient
-     */
-    private function addDnsTemplateRecord(Api\InternalClient $apiClient)
+    private function addDnsTemplateRecord()
     {
-        $operator = method_exists($apiClient, 'dnsTemplate') ? $apiClient->dnsTemplate() : $apiClient->dns();
+        $operator = method_exists($this->apiClient, 'dnsTemplate')
+            ? $this->apiClient->dnsTemplate()
+            : $this->apiClient->dns();
 
         try {
             $dnsRecordInfo = $operator->create([
@@ -96,38 +99,39 @@ class Installer
      */
     private function cleanUpDnsTemplate()
     {
-        $apiClient = new Api\InternalClient();
-        if ($record = $this->findDnsTemplateRecord($apiClient)) {
-            $this->deleteDnsTemplateRecord($apiClient, $record->id);
+        if ($record = $this->findDnsTemplateRecord()) {
+            $this->deleteDnsTemplateRecord($record->id);
         }
     }
 
-    private function deleteDnsTemplateRecord(Api\InternalClient $apiClient, $dnsTemplateRecordId)
+    private function deleteDnsTemplateRecord($dnsTemplateRecordId)
     {
-        if (!method_exists($apiClient, 'dnsTemplate')) {
+        if (!method_exists($this->apiClient, 'dnsTemplate')) {
             \pm_Log::debug("DNS Template operator is not supported");
             return;
         }
 
         try {
-            $apiClient->dnsTemplate()->delete('id', $dnsTemplateRecordId);
+            $this->apiClient->dnsTemplate()->delete('id', $dnsTemplateRecordId);
         } catch (\Exception $e) {
             \pm_Log::err("Unable to remove record #{$dnsTemplateRecordId} from Plesk DNS template: {$e->getMessage()}");
             \pm_Log::debug($e);
         }
     }
 
-    private function getPleskHost()
+    public function getPleskHost()
     {
-        $apiClient = new Api\InternalClient();
-        $hostname = $apiClient->server()->getGeneralInfo()->serverName;
-        if (checkdnsrr($hostname, 'A') || checkdnsrr($hostname, 'AAAA')) {
+        $hostname = $this->apiClient->server()->getGeneralInfo()->serverName;
+        $dot = strrpos($hostname, '.');
+        $reservedTLDs = ['.local', '.tld', '.example', '.invalid', '.localhost', '.test'];
+        $isValidHostname = !(false === $dot || in_array(substr($hostname, $dot), $reservedTLDs, true));
+        if ($isValidHostname && (checkdnsrr($hostname, 'A') || checkdnsrr($hostname, 'AAAA'))) {
             return '<hostname>';
         }
         return '<ip>';
     }
 
-    private function getPleskPort()
+    public function getPleskPort()
     {
         return '8443';
     }
