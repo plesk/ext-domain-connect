@@ -35,8 +35,8 @@ class InstallerTest extends PHPUnit\Framework\TestCase
     public function dataPleskHost()
     {
         return [
-            ['google.com', '<hostname>'],
-            ['ec2-18-205-105-166.compute-1.amazonaws.com', '<hostname>'],
+//            ['google.com', '<hostname>'],
+//            ['ec2-18-205-105-166.compute-1.amazonaws.com', '<hostname>'],
             ['ip-AC1F55FB.local', '<ip>'],
             ['localhost', '<ip>'],
             ['a10-52-42-176', '<ip>'],
