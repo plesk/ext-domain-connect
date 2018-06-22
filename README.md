@@ -4,4 +4,4 @@ Connecting domains to your webspace is not always easy - especially for less tec
 
 ## Requirements
 
-   * Plesk Onyx 17.* or later
+   * Plesk Onyx 17.* or later 
