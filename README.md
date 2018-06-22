@@ -8,4 +8,4 @@ In both cases, you will have to configure DNS settings. This may be a challengin
 
 ## Requirements
 
-   * Plesk Onyx 17.* or later 
+   * Plesk Onyx 17.x or later 
