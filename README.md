@@ -1,4 +1,4 @@
-# Plesk Extension for Domain Connect Standard
+# The Domain Connect Extension
 
 Buying a domain name is just the start of a journey. To put your website online, you need to associate it with your domain.
 
