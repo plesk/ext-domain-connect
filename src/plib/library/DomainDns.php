@@ -17,7 +17,7 @@ class DomainDns
     {
         \pm_Log::info("Add record for domain #{$this->domain->getId()}");
         $apiClient = new Api\InternalClient();
-        $apiClient->dns()->create($this->_getPleskRecordData($this->domain, $record));
+        $apiClient->dns()->create($this->formatRecordForAPI($this->domain, $record));
     }
 
     public function removeRecord($record)
@@ -38,8 +38,8 @@ class DomainDns
                 $records[] = (object)array_merge([
                     'id' => $dnsRecordInfo->id,
                     'type' => $dnsRecordInfo->type,
-                ], $this->_getDomainConnectRecordData(
-                    $this->domain->getName(),
+                ], $this->formatRecordForDomainConnect(
+                    $this->domain,
                     $dnsRecordInfo->type,
                     $dnsRecordInfo->host,
                     $dnsRecordInfo->value,
@@ -54,88 +54,69 @@ class DomainDns
         return $records;
     }
 
-    /**
-     * Return RNS record data in Plesk format
-     *
-     * @param \pm_Domain $domain
-     * @param \stdClass $record
-     * @return array
-     */
-    private function _getPleskRecordData(\pm_Domain $domain, \stdClass $record)
+    public function formatRecordForAPI(\pm_Domain $domain, \stdClass $record)
     {
-        if ('@' === $record->host) {
-            $host = '';
-        } else {
-            $host = $record->host;
-        }
-        $value = '';
-        $opt = '';
         switch ($record->type) {
             case 'A':
             case 'AAAA':
-                $value = $record->pointsTo;
-                break;
             case 'CNAME':
             case 'NS':
-                $value = '@' === $record->pointsTo ? $domain->getName() : $record->pointsTo;
-                break;
+                return [
+                    'site-id' => $domain->getId(),
+                    'type' => $record->type,
+                    'host' => $this->relativeHost($domain, $record->host),
+                    'value' => $record->pointsTo,
+                    'opt' => '',
+                ];
             case 'MX':
-                $value = $record->pointsTo;
-                $opt = $record->priority;
-                break;
+                return [
+                    'site-id' => $domain->getId(),
+                    'type' => $record->type,
+                    'host' => $this->relativeHost($domain, $record->host),
+                    'value' => $record->pointsTo,
+                    'opt' => $record->priority,
+                ];
             case 'TXT':
-                $value = $record->data;
-                break;
+                return [
+                    'site-id' => $domain->getId(),
+                    'type' => $record->type,
+                    'host' => $this->relativeHost($domain, $record->host),
+                    'value' => $record->data,
+                    'opt' => '',
+                ];
             case 'SRV':
-                $host = '@' === $record->name || '' === $record->name ? '' : $record->name;
-                $host = rtrim("{$record->service}.{$record->protocol}.{$host}", '.');
-                $value = $record->target;
-                $opt = "{$record->priority} {$record->weight} {$record->port}";
-                break;
+                return [
+                    'site-id' => $domain->getId(),
+                    'type' => $record->type,
+                    'host' => $this->relativeHost($domain, "{$record->service}.{$record->protocol}.{$record->name}"),
+                    'value' => $record->target,
+                    'opt' => "{$record->priority} {$record->weight} {$record->port}",
+                ];
+            default:
+                throw new Exception\RecordNotSupported("Record type '{$record->type}' is not supported");
         }
-        return [
-            'site-id' => $domain->getId(),
-            'type' => $record->type,
-            'host' => $host,
-            'value' => $value,
-            'opt' => $opt,
-        ];
     }
 
-    /**
-     * Return DNS record data in Domain Connect format
-     *
-     * @param string $type
-     * @param string $host
-     * @param string $value
-     * @param string $opt
-     * @param string $domainName
-     * @return array
-     */
-    private function _getDomainConnectRecordData($domainName, $type, $host, $value, $opt)
+    public function formatRecordForDomainConnect(\pm_Domain $domain, $type, $host, $value, $opt)
     {
         switch ($type) {
             case 'A':
             case 'AAAA':
-                return [
-                    'host' => $this->_convertHost($domainName, $host),
-                    'pointsTo' => $value,
-                ];
             case 'CNAME':
             case 'NS':
                 return [
-                    'host' => $this->_convertHost($domainName, $host),
-                    'pointsTo' => $this->_convertHost($domainName, $value),
+                    'host' => $this->fullHost($domain, $host),
+                    'pointsTo' => $value,
                 ];
             case 'MX':
                 return [
-                    'host' => $this->_convertHost($domainName, $host),
+                    'host' => $this->fullHost($domain, $host),
                     'pointsTo' => $value,
                     'priority' => (string)(int)$opt,
                 ];
             case 'TXT':
                 return [
-                    'host' => $this->_convertHost($domainName, $host),
+                    'host' => $this->fullHost($domain, $host),
                     'data' => $value,
                 ];
             case 'SRV':
@@ -145,7 +126,7 @@ class DomainDns
                 return [
                     'service' => isset($hostData[0]) ? $hostData[0] : '',
                     'protocol' => isset($hostData[1]) ? $hostData[1] : '',
-                    'name' => $this->_convertHost($domainName, $serviceHost),
+                    'name' => $this->fullHost($domain, $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',
                     'port' => isset($optData[2]) ? $optData[2] : '',
@@ -160,22 +141,30 @@ class DomainDns
         }
     }
 
-    /**
-     * Return host converted to the format compatible with Domain Connect templates
-     *
-     * @param $domainName
-     * @param $rawHost
-     * @return string
-     */
-    private function _convertHost($domainName, $rawHost)
+    public function fullHost(\pm_Domain $domain, $host)
     {
-        $host = $rawHost;
-        $pos = strrpos($rawHost, $domainName);
-        if (0 === $pos) {
-            $host = '@';
-        } elseif (false !== $pos) {
-            $host = substr($host, 0, $pos - 1);
+        $host = rtrim($host, '.');
+        $domainName = $domain->getName();
+        if (empty($host)) {
+            return "{$domainName}.";
         }
+        if (strrpos($host, $domainName) === strlen($host) - strlen($domainName)) {
+            return "{$host}.";
+        }
+        $host = "{$host}.{$domainName}.";
+
+        return $host;
+    }
+
+    public function relativeHost(\pm_Domain $domain, $host)
+    {
+        $host = rtrim($host, '.');
+        $domainName = $domain->getName();
+        if (strrpos($host, $domainName) === strlen($host) - strlen($domainName)) {
+            $host = substr($host, 0,  -strlen($domainName));
+            $host = rtrim($host, '.');
+        }
+
         return $host;
     }
 }

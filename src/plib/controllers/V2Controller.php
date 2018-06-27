@@ -57,10 +57,6 @@ class V2Controller extends pm_Controller_Action
         $service = $this->getParam('services');
         $domainName = $this->getParam('domain');
         $providerName = $this->getParam('providerName');
-        $groups = array_filter(explode(',', $this->getParam('groupId', '')));
-        $parameters = array_filter($this->getAllParams(), function ($param) {
-            return !in_array($param, ['module', 'controller', 'action', 'providers', 'services', 'apply', 'domain', 'providerName']);
-        }, ARRAY_FILTER_USE_KEY);
 
         $domain = \pm_Domain::getByName($domainName);
         $this->checkDomainAccess($domain);
@@ -74,7 +70,7 @@ class V2Controller extends pm_Controller_Action
             );
         }
 
-        $changes = $template->testRecords($domain, $groups, $parameters);
+        $changes = $template->testRecords($domain, $this->getGroupsFilter(), $this->getSubstParams($domain));
         if ($this->getRequest()->isPost()) {
             $template->applyChanges($domain, $changes);
 
@@ -115,6 +111,30 @@ class V2Controller extends pm_Controller_Action
             }
         }
         return null;
+    }
+
+    private function getGroupsFilter()
+    {
+        return array_filter(
+            explode(',', $this->getParam('groupId', ''))
+        );
+    }
+
+    private function getSubstParams(\pm_Domain $domain)
+    {
+        $parameters = $this->getAllParams();
+        $parameters = array_filter($parameters, function ($param) {
+            return !in_array($param, ['module', 'controller', 'action', 'providers', 'services', 'apply', 'domain', 'providerName']);
+        }, ARRAY_FILTER_USE_KEY);
+
+        $parameters['host'] = $this->getParam('host', null);
+        $parameters['domain'] = $this->getParam('domain');
+        $parameters['fqdn'] = "{$domain->getName()}.";
+        if (!empty($parameters['host'])) {
+            $parameters['fqdn'] = "{$parameters['host']}.{$parameters['fqdn']}";
+        }
+
+        return $parameters;
     }
 
     public function successAction()

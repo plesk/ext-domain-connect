@@ -113,19 +113,16 @@ class Template
 
     private function prepareRecord(\stdClass $record, array $parameters)
     {
-        switch ($record->type) {
-            case 'MX':
-                $record->priority = isset($record->priority) ? (string)$record->priority : null;
-                break;
-        }
-
-        $keys = ['host', 'pointsTo', 'target', 'data'];
-        foreach ($parameters as $variable => $value) {
-            foreach ($keys as $key) {
-                if (isset($record->{$key})) {
-                    $record->{$key} = str_ireplace("%{$variable}%", $value, $record->{$key});
-                }
+        foreach (get_object_vars($record) as $key => $recordValue) {
+            $recordValue = (string)$recordValue;
+            foreach ($parameters as $variable => $value) {
+                $recordValue = str_ireplace("%{$variable}%", $value, $recordValue);
             }
+
+            $fqdn = isset($parameters['fqdn']) ? $parameters['fqdn'] : '.';
+            $recordValue = str_replace('@', $fqdn, $recordValue);
+
+            $record->{$key} = $recordValue;
         }
         return $record;
     }
