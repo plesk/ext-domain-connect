@@ -5,31 +5,44 @@ use PleskExt\DomainConnect\DomainDns;
 
 class DomainDnsTest extends PHPUnit\Framework\TestCase
 {
-    /** @var pm_Domain */
-    private $domain;
-
-    /** @var DomainDns */
-    private $domainDns;
-
-    public function setUp()
+    /**
+     * @dataProvider dataRelativeHost
+     * @param string $expected
+     * @param string $fqdn
+     * @param string $fullHost
+     */
+    public function testRelativeHost($expected, $fqdn, $fullHost)
     {
-        parent::setUp();
-        $this->domain = $this->createMock(pm_Domain::class);
-        $this->domain->method('getName')->willReturn('example.com');
-        $this->domainDns = new DomainDns($this->domain);
+        $this->assertEquals($expected, DomainDns::relativeHost($fqdn, $fullHost));
     }
 
-    public function testRelativeHost()
+    public function dataRelativeHost()
     {
-        $this->assertEquals('test', $this->domainDns->relativeHost($this->domain, 'test.example.com.'));
-        $this->assertEquals('test', $this->domainDns->relativeHost($this->domain, 'test.example.com'));
-        $this->assertEquals('test', $this->domainDns->relativeHost($this->domain, 'test'));
+        return [
+            ['test', 'example.com', 'test.example.com.'],
+            ['test', 'example.com', 'test.example.com'],
+            ['test', 'example.com', 'test'],
+        ];
     }
 
-    public function testFullHost()
+    /**
+     * @dataProvider dataFullHost
+     * @param string $expected
+     * @param string $fqdn
+     * @param string $relativeHost
+     */
+    public function testFullHost($expected, $fqdn, $relativeHost)
     {
-        $this->assertEquals('test.example.com.', $this->domainDns->fullHost($this->domain, 'test'));
-        $this->assertEquals('test.example.com.', $this->domainDns->fullHost($this->domain, 'test.example.com'));
-        $this->assertEquals('example.com.', $this->domainDns->fullHost($this->domain, ''));
+        $this->assertEquals($expected, DomainDns::fullHost($fqdn, $relativeHost));
+    }
+
+    public function dataFullHost()
+    {
+        return [
+            ['test.example.com.', 'example.com', 'test'],
+            ['test.example.com.', 'example.com.', 'test'],
+            ['test.example.com.', 'example.com', 'test.example.com'],
+            ['example.com.', 'example.com', ''],
+        ];
     }
 }

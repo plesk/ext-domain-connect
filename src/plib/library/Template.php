@@ -53,9 +53,8 @@ class Template
             if (!empty($groups) && (!isset($record->groupId) || !in_array($record->groupId, $groups, true))) {
                 continue;
             }
-            $record = $this->prepareRecord($record, $parameters);
             $this->validateRecord($record);
-            $records[] = $record;
+            $records[] = $this->prepareRecord($record, $parameters);
         }
         return $records;
     }
@@ -113,17 +112,36 @@ class Template
 
     private function prepareRecord(\stdClass $record, array $parameters)
     {
+        if (empty($parameters['fqdn']) || '.' === $parameters['fqdn']) {
+            throw new \pm_Exception("Required 'fqdn' parameter is missing");
+        }
+        $fqdn = $parameters['fqdn'];
+
         foreach (get_object_vars($record) as $key => $recordValue) {
             $recordValue = (string)$recordValue;
             foreach ($parameters as $variable => $value) {
                 $recordValue = str_ireplace("%{$variable}%", $value, $recordValue);
             }
 
-            $fqdn = isset($parameters['fqdn']) ? $parameters['fqdn'] : '.';
             $recordValue = str_replace('@', $fqdn, $recordValue);
 
             $record->{$key} = $recordValue;
         }
+
+        switch ($record->type) {
+            case 'A':
+            case 'AAAA':
+            case 'CNAME':
+            case 'NS':
+            case 'MX':
+            case 'TXT':
+                $record->host = DomainDns::fullHost($fqdn, $record->host);
+                break;
+            case 'SRV':
+                $record->name = DomainDns::fullHost($fqdn, $record->name);
+                break;
+        }
+
         return $record;
     }
 

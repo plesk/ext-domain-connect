@@ -13,7 +13,7 @@ class TemplateTest extends PHPUnit\Framework\TestCase
     public function testGetTemplateRecords($provider, $service)
     {
         $template = new Template($provider, $service);
-        $records = $template->getTemplateRecords();
+        $records = $template->getTemplateRecords([], ['fqdn' => 'example.com.']);
         $this->assertNotEmpty($records);
     }
 
