@@ -64,7 +64,7 @@ class DomainDns
                 return [
                     'site-id' => $domain->getId(),
                     'type' => $record->type,
-                    'host' => $this->relativeHost($domain, $record->host),
+                    'host' => static::relativeHost($domain->getName(), $record->host),
                     'value' => $record->pointsTo,
                     'opt' => '',
                 ];
@@ -72,7 +72,7 @@ class DomainDns
                 return [
                     'site-id' => $domain->getId(),
                     'type' => $record->type,
-                    'host' => $this->relativeHost($domain, $record->host),
+                    'host' => static::relativeHost($domain->getName(), $record->host),
                     'value' => $record->pointsTo,
                     'opt' => $record->priority,
                 ];
@@ -80,7 +80,7 @@ class DomainDns
                 return [
                     'site-id' => $domain->getId(),
                     'type' => $record->type,
-                    'host' => $this->relativeHost($domain, $record->host),
+                    'host' => static::relativeHost($domain->getName(), $record->host),
                     'value' => $record->data,
                     'opt' => '',
                 ];
@@ -88,7 +88,7 @@ class DomainDns
                 return [
                     'site-id' => $domain->getId(),
                     'type' => $record->type,
-                    'host' => $this->relativeHost($domain, "{$record->service}.{$record->protocol}.{$record->name}"),
+                    'host' => static::relativeHost($domain->getName(), "{$record->service}.{$record->protocol}.{$record->name}"),
                     'value' => $record->target,
                     'opt' => "{$record->priority} {$record->weight} {$record->port}",
                 ];
@@ -105,18 +105,18 @@ class DomainDns
             case 'CNAME':
             case 'NS':
                 return [
-                    'host' => $this->fullHost($domain, $host),
+                    'host' => static::fullHost($domain->getName(), $host),
                     'pointsTo' => $value,
                 ];
             case 'MX':
                 return [
-                    'host' => $this->fullHost($domain, $host),
+                    'host' => static::fullHost($domain->getName(), $host),
                     'pointsTo' => $value,
                     'priority' => (string)(int)$opt,
                 ];
             case 'TXT':
                 return [
-                    'host' => $this->fullHost($domain, $host),
+                    'host' => static::fullHost($domain->getName(), $host),
                     'data' => $value,
                 ];
             case 'SRV':
@@ -126,7 +126,7 @@ class DomainDns
                 return [
                     'service' => isset($hostData[0]) ? $hostData[0] : '',
                     'protocol' => isset($hostData[1]) ? $hostData[1] : '',
-                    'name' => $this->fullHost($domain, $serviceHost),
+                    'name' => static::fullHost($domain->getName(), $serviceHost),
                     'priority' => isset($optData[0]) ? $optData[0] : '',
                     'weight' => isset($optData[1]) ? $optData[1] : '',
                     'port' => isset($optData[2]) ? $optData[2] : '',
@@ -141,27 +141,27 @@ class DomainDns
         }
     }
 
-    public function fullHost(\pm_Domain $domain, $host)
+    public static function fullHost($fqdn, $host)
     {
+        $fqdn = rtrim($fqdn, '.');
         $host = rtrim($host, '.');
-        $domainName = $domain->getName();
         if (empty($host)) {
-            return "{$domainName}.";
+            return "{$fqdn}.";
         }
-        if (strrpos($host, $domainName) === strlen($host) - strlen($domainName)) {
+        if (strrpos($host, $fqdn) === strlen($host) - strlen($fqdn)) {
             return "{$host}.";
         }
-        $host = "{$host}.{$domainName}.";
+        $host = "{$host}.{$fqdn}.";
 
         return $host;
     }
 
-    public function relativeHost(\pm_Domain $domain, $host)
+    public static function relativeHost($fqdn, $host)
     {
+        $fqdn = rtrim($fqdn, '.');
         $host = rtrim($host, '.');
-        $domainName = $domain->getName();
-        if (strrpos($host, $domainName) === strlen($host) - strlen($domainName)) {
-            $host = substr($host, 0,  -strlen($domainName));
+        if (strrpos($host, $fqdn) === strlen($host) - strlen($fqdn)) {
+            $host = substr($host, 0,  -strlen($fqdn));
             $host = rtrim($host, '.');
         }
 
