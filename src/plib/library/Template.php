@@ -36,7 +36,7 @@ class Template
                 continue;
             }
             $changes['toAdd'][] = $record;
-            foreach ($this->getConflicts($domainRecords, $record) as $conflictRecord) {
+            foreach (static::getConflicts($domainRecords, $record) as $conflictRecord) {
                 if ($this->isExist($changes['toRemove'], $conflictRecord)) {
                     continue;
                 }
@@ -185,16 +185,26 @@ class Template
         return false;
     }
 
-    private function getConflicts(array $domainRecords, \stdClass $record)
+    public static function getConflicts(array $domainRecords, \stdClass $record)
     {
         $conflicts = [];
         foreach ($domainRecords as $domainRecord) {
+            if ($domainRecord->type === 'CNAME'
+                && $domainRecord->host === static::getRecordHost($record)) {
+                $conflicts[] = $domainRecord;
+                continue;
+            }
+
             switch ($record->type) {
                 case 'A':
                 case 'AAAA':
-                case 'CNAME':
-                    if (in_array($domainRecord->type, ['A', 'AAAA', 'CNAME'])
+                    if (in_array($domainRecord->type, ['A', 'AAAA'])
                         && $domainRecord->host === $record->host) {
+                        $conflicts[] = $domainRecord;
+                    }
+                    break;
+                case 'CNAME':
+                    if ($record->host === static::getRecordHost($domainRecord)) {
                         $conflicts[] = $domainRecord;
                     }
                     break;
@@ -222,6 +232,16 @@ class Template
             }
         }
         return $conflicts;
+    }
+
+    private static function getRecordHost(\stdClass $record)
+    {
+        switch ($record->type) {
+            case 'SRV':
+                return $record->name;
+            default:
+                return $record->host;
+        }
     }
 
     public function applyChanges(\pm_Domain $domain, array $changes)
