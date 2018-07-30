@@ -104,16 +104,12 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             return;
         }
 
-        $specs = implode(',', [
-            "width={$options['width']}",
-            "height={$options['height']}",
-        ]);
         $message = \pm_Locale::lmsg('message.connect', [
             'domain' => $domain->getDisplayName(),
-            'url' => $this->escapeHTML("javascript:window.open({$this->jsEscape($url)}, '', {$this->jsEscape($specs)});"),
+            'link' => "<a href=\"{$this->escapeHTML($url)}\">" . \pm_Locale::lmsg('message.link') . "</a>",
         ]);
         $closable = !$permanentMessage;
-        $this->warnings[] = [$domain->getId(), $message, $closable];
+        $this->warnings[] = [$domain->getId(), $message, $closable, $options];
     }
 
     public function getHeadContent()
@@ -122,16 +118,13 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             return '';
         }
 
-        return '<script src="' . pm_Context::getBaseUrl() . 'domain-connect.js"></script>';
+        return '<script src="' . pm_Context::getBaseUrl() . 'domain-connect.js?v1.1.1"></script>';
     }
 
     public function getJsOnReadyContent()
     {
         return implode("\n", array_map(function($warning) {
-            list($domainId, $message, $closable) = $warning;
-            return "PleskExt.DomainConnect.addConnectionMessage(" .
-                "{$this->jsEscape($domainId)}, {$this->jsEscape($message)}, {$this->jsEscape($closable)}" .
-            ");";
+            return "PleskExt.DomainConnect.addConnectionMessage.apply(null, {$this->jsEscape($warning)});";
         }, $this->warnings));
     }
 
