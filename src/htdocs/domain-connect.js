@@ -27,5 +27,9 @@ PleskExt.DomainConnect.addConnectionMessage = function(domainId, message, closab
             ? 'width=' + options.width + ',' + 'height=' + options.height
             : '';
         window.open(linkEl.href, '', features);
+        new Ajax.Request(Jsw.prepareUrl('/modules/domain-connect/index.php/index/configure-link-click'), {
+            method: 'post',
+            parameters: { 'domainId': domainId }
+        });
     });
 };

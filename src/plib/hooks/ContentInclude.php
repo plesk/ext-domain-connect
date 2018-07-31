@@ -79,7 +79,9 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         if (!$domain->hasHosting()) {
             return;
         }
+
         $hostingIps = $domain->getIpAddresses();
+
         try {
             $resolvedIp = Dns::aRecord($domain->getName());
         } catch (\pm_Exception $e) {
@@ -89,11 +91,18 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
         if (in_array($resolvedIp, $hostingIps)) {
             \pm_Log::info("Domain {$domain->getDisplayName()} is already resolved to the current server.");
+
+            $domain->setSetting('connected', 1);
+
             return;
         }
+
         \pm_Log::debug("Domain {$domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
 
+        $domain->setSetting('connected', 0);
+
         $serviceId = \pm_Config::get('webServiceId');
+
         try {
             $url = $domainConnect->getApplyTemplateUrl($serviceId, [
                 'ip' => reset($hostingIps),
@@ -101,8 +110,13 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             $options = $domainConnect->getWindowOptions();
         } catch (\pm_Exception $e) {
             \pm_Log::info($e->getMessage());
+
+            $domain->setSetting('connectable', 0);
+
             return;
         }
+
+        $domain->setSetting('connectable', 1);
 
         $message = \pm_Locale::lmsg('message.connect', [
             'domain' => $domain->getDisplayName(),
