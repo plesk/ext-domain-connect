@@ -1,0 +1,7 @@
+Egy domain név megvásárlása csak a munka kezdete. A webhelyének interneten való megjelenítéséhez társítania kell azt a domainjéhez. 
+
+Ha egy nyilvántartásból vásárolt egy domain nevet és egy mások üzemeltető üzemelteti a webhelyét, akkor esetleg gondoskodnia kell arról, hogy a Plesk kiszolgálójára mutatasson a domain név. Ha már a Plesk kiszolgálóra mutat a domain neve, akkor előfordulhat, hogy további harmadik fél szolgáltatásait (például levelezési vagy e-kereskedelmi platformot) akarja a webhelyéhez adni. 
+
+Mindkét esetben el kell végeznie a DNS-beállítások konfigurálását. Ez kihívást jelentő feladat, különösen kezdők számára. A Domainhez kapcsolódás bővítményt használja e feladat könnyű elvégzéséhez. Csak adja meg a domain nevét és a bővítmény automatikusan elvégzi a DNS-beállítások konfigurálását a számára. 
+
+**Felelősséget kizáró nyilatkozat:** Jelenleg ez csak kiválasztott üzemeltetők esetében működik [itt található a felsorolásuk](https://www.domainconnect.org). Előfordulhat, hogy még nem fejezte be e Plesk funkció telepítését. Ha még nem aktiválta, akkor még kérjük a türelmét és a megértését, továbbá köszönjük a gyors visszajelzését, melyet a továbbfejlesztéshez használunk fel. Ha olyan DNS-szolgáltató vagy szolgáltató, amely érdeklődik a Plesk Domainhez kapcsolódás funkció iránt, akkor kérjük, hogy a [domainconnect@plesk.com](mailto:domainconnect@plesk.com) címet használja a kapcsolat felvételéhez.

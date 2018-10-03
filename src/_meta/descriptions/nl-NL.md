@@ -1,0 +1,7 @@
+Het aanschaffen van een domeinnaam is alleen nog maar het begin. Voor uw website online is, moet u deze koppelen aan uw domein.
+
+Als u een domeinnaam hebt aangeschaft bij een bedrijf dat domeinregistratie verzorgd (een registrar) en uw website bij een ander bedrijf (een hostingprovider), dan moet u waarschijnlijk eerst de domeinnaam naar uw Plesk-server verwijzen. Als uw domeinnaam al naar Plesk verwijst, dan wilt u wellicht extra diensten van derden toevoegen aan uw website, zoals e-mail of een e-commerceplatform.  
+
+In beide gevallen moet u de DNS-instellingen configureren. Dit kan best nog een uitdaging zijn, zeker als u het voor het eerst doet. U kunt de Domain Connect-extensie gebruiken om het allemaal wat makkelijker te maken. Geef simpelweg de domeinnaam op, en de extensie zal de DNS-instellingen automatisch voor u configureren.
+
+**Disclaimer:** Dit werkt op dit moment alleen voor een geselecteerd aantal hostingproviders [deze kunt hier zien] (https://www.domainconnect.org). Een groot aantal is nog bezig met het implementeren van deze functie van Plesk. Als de functie voor u nog niet is geactiveerd, dan vragen we u nog wat geduld. Wij waarderen eventuele vroege feedback, zodat we het systeem steeds beter kunnen maken. Als u een DNS-provider bent of een serviceprovider en u bent geïnteresseerd in integratie met Plesk via Domain Connect, neem dan contact op met [domainconnect@plesk.com] (mailto: domainconnect@plesk.com).

@@ -1,0 +1,7 @@
+Comprar um nome de domínio é apenas o começo de uma jornada. Para colocar seu site online, é necessário associá-lo ao seu domínio. 
+
+Se você comprou um nome de domínio de um registrador e hospedou seu site em outro provedor de hospedagem, pode ser necessário apontar o domínio para o seu servidor Plesk. Caso seu domínio já esteja apontando para o Plesk, você poderá adicionar outros serviços de terceiros (por exemplo uma plataforma de email ou e-commerce) ao seu site. 
+
+Em ambos os casos, será necessário definir as configurações de DNS. Esta pode ser uma tarefa desafiadora, especialmente para um iniciante. Para concluir essa tarefa facilmente, utilize a extensão do Domain Connect. Basta fornecer o domínio e a extensão definirá automaticamente as configurações de DNS para você. 
+
+**Configuração da Declaração:** Atualmente, isso funciona apenas para um conjunto de provedores de hospedagem [listados aqui](https://www.domainconnect.org). Muitos outros ainda podem estar implementando este recurso do Plesk. Portanto, caso você não ativou ainda, pedimos sua paciência e agradecemos qualquer feedback para continuar com as melhorias. Caso você seja um Provedor de DNS ou Provedor de Serviços interessado em realizar a integração com o Plesk usando o Domain Connect, por favor contatar [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

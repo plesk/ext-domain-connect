@@ -1,0 +1,7 @@
+L’acquisto di un nome di dominio è solo l’inizio del viaggio.Per pubblicare il tuo sito Web online è necessario associarlo al tuo dominio.
+
+Se hai acquistato un nome di dominio da un Registrar e il tuo sito Web viene ospitato da un altro provider di hosting, potresti dover indicare il nome del dominio al tuo server Plesk.Se il nome del tuo dominio fa già riferimento a Plesk, può essere opportuno aggiungere ulteriori servizi di terze parti (ad esempio, piattaforma di e-commerce o posta) al tuo sito Web.
+
+In entrambi i casi, dovrai configurare le impostazioni DNS.Ciò può essere difficile, soprattutto per un principiante.Per svolgere questa attività agevolmente utilizza l’estensione Domain Connect.È sufficiente fornire il nome del dominio e l’estensione configura automaticamente le impostazioni DNS per te. 
+
+**Esclusione di responsabilità:** attualmente questa caratteristica funziona soltanto per un gruppo selezionato di provider di hosting [qui elencati](https://www.domainconnect.org). Molti potrebbero ancora stare implementando questa funzionalità di Plesk.Quindi, se ancora non l’hai attivata, ti invitiamo a pazientare e apprezzeremo qualsiasi feedback iniziale che ci aiuti a proseguire nei nostri miglioramenti.Se sei un provider DNS o un provider di servizi interessato all’integrazione con Plesk tramite Domain Connect, contatta [domainconnect@plesk.com] (mailto:domainconnect@plesk.com).

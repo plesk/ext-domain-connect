@@ -1,0 +1,7 @@
+Cumpărarea unui nume de domeniu este doar primul pas. Pentru ca site-ul să fie accesibil online, trebuie să-l asociați cu domeniul. 
+
+Dacă ați cumpărat un nume de domeniu de la o instituție de înregistrare și găzduiți site-ul la un alt furnizor de servicii, poate fi nevoie de direcționarea numelui de domeniu spre serverul Plesk. Dacă numele de domeniu este direcționat deja spre Plesk, puteți adăuga alte servicii terță parte la site (de exemplu, e-mail sau o platformă de comerț electronic). 
+
+În ambele cazuri trebuie să configurați setările DNS. Această operație poate fi dificilă, în special pentru începători. Pentru a rezolva ușor problema, utilizați extensia Domain Connect. Este suficient să introduceți numele de domeniu: extensia va configura automat setările DNS. 
+
+**Precizare:** În acest moment, extensia funcționează numai cu anumiți furnizori de servicii de găzduire [lista este disponibilă aici](https://www.domainconnect.org). Este posibil ca mulți alții să fie în curs de implementare a acestei funcții Plesk. Deci, dacă nu este activată încă, vă rugăm să aveți răbdare. Vă mulțumim pentru eventualele observații timpurii, care ne ajută să îmbunătățim produsul. Dacă sunteți furnizor DNS sau de servicii și doriți să vă integrați sistemele cu Plesk folosind Domain Connect, contactați [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

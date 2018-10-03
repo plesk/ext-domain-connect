@@ -1,0 +1,7 @@
+Comprar um nome de domínio é apenas o começo de uma viagem. Para colocar o seu website online, precisa de o associar ao seu domínio.
+
+Se comprou um nome de domínio de um conservador e alojou o seu website noutro fornecedor de alojamento, poderá ser necessário direcionar o nome do domínio para o seu servidor Plesk. Se o seu nome de domínio já estiver a direcionar para o Plesk, poderá adicionar outros serviços de terceiros (por exemplo, e-mail ou plataforma de e-commerce) ao seu website.  
+
+Em ambos os casos, terá de definir as configurações DNS. Esta pode ser uma tarefa desafiadora, especialmente para um iniciante. Para realizar essa tarefa facilmente, utilize a extensão do Domain Connect. Basta fornecer o nome de domínio e a extensão configurará automaticamente as configurações de DNS por si.
+
+**Exoneração de responsabilidade:** Atualmente, tal funciona apenas para um conjunto selecionado de fornecedor de alojamento [listados aqui](https://www.domainconnect.org). Muitos ainda podem estar a implementar esta funcionalidade do Plesk. Nesse caso, se ainda não o tiver ativado, pedimos-lhe um pouco mais de paciência e agradecemos qualquer informação para continuar a melhorar. Se for um fornecedor de DNS ou um fornecedor de serviços interessado na integração com o Plesk, utilizando o Domain Connect, contacte [domainconnect@plesk.com] (mailto: domainconnect@plesk.com).

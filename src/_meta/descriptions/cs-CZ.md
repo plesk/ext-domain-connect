@@ -1,0 +1,7 @@
+Nákup názvu domény je jenom začátkem cesty. Chcete-li umístit web online, budete jej muset přiřadit ke své doméně. 
+
+Pokud jste název domény zakoupili od registrátora a hostujete své weby u jiného poskytovatele hostingu, možná budete muset nasměrovat název na svůj server Plesk. Pokud je váš název domény již nasměrován do prostředí Plesk, můžete na svůj web přidat další služby třetích stran (například e-mail nebo platformu pro elektronický obchod). 
+
+V obou případech musíte nakonfigurovat nastavení DNS. To může být náročnější úkol, zejména pro začátečníka. Abyste tento úkol snadno zvládli, použijte rozšíření Připojit doménu. Stačí poskytnout název domény a rozšíření pro vás automaticky nakonfiguruje nastavení DNS. 
+
+**Prohlášení:** V současnosti pracuje tato funkce pouze pro vybranou skupinu poskytovatelů hostingu [seznam zde](https://www.domainconnect.org). Řada dalších však může tuto funkci prostředí Plesk stále implementovat. Takže pokud jste ji dosud neaktivovali, žádáme vás laskavě o trpělivost a uvítáme včasnou zpětnou vazbu, abychom mohli pokračovat ve zdokonalování. Pokud jste poskytovatelem DNS nebo poskytovatelem služeb, který se zajímá o integraci prostředí Plesk pomocí rozšíření Připojit doménu, obraťte se na [domainconnect@plesk.com] (mailto:domainconnect@plesk.com).
