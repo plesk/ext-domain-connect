@@ -1,0 +1,7 @@
+Att köpa ett domännamn är bara början på en resa. För att lansera din webbplats på nätet, behöver du koppla den samman med din domän. 
+
+Om du har köpt ett domännamn från en registeransvarig och har din webbplats hos en annan webbleverantör, kan du behöva rikta in domännamnet på din Plesk-server.Om ditt domännamn redan är riktat på Plesk kanske du vill lägga till ytterligare tjänster från tredje part (till exempel e-post eller e-handelsplattform) på din webbplats.
+
+I båda dessa fall måste du konfigurera DNS-inställningarna. Detta kan vara en utmanande uppgift, särskilt för nybörjare. För att klara av uppgiften enkelt, använd Domain Connect-ändelsen. Ange bara domännamnet så kommer DNS-inställningarna att konfigurerats automatiskt. 
+
+**Friskrivningsklausul:** För närvarande fungerar det bara för en vald uppsättning webbhotell [listas här](https://www.domainconnect.org). Många håller fortfarande på att implementera denna Plesk-funktion. Så om du inte har aktiverat den ännu, ber vi dig vara tålmodig och vi uppskattar feedback från dig på ett tidigt stadium för att kunna fortsätta med förbättringar. Om du är en DNS-leverantör eller en tjänsteleverantör intresserad av att integrera Plesk via Domain Connect, vänligen kontakta [domainconnect@plesk.com] (mailto: domainconnect@plesk.com).

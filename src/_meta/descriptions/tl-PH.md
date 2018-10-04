@@ -1,0 +1,7 @@
+Simula pa lang ng paglalakbay ang pagbili ng domain name. Upang mailagay sa online ang iyong website, kailangan mo itong iugnay sa iyong domain.
+
+Kung bumili ka ng domain name sa isang registrar at na-host ang iyong website sa ibang hosting provider, maaaring kailanganin mong ituro ang domain name sa iyong Plesk server. Kung nakaturo na sa Plesk ang iyong domain name, maaaring gustuhin mong magdagdag ng mga karagdagang third-party na serbisyo (halimbawa, platform ng mail o e-commerce) sa iyong website.  
+
+Sa parehong pagkakataon, kakailanganin mong i-configure ang mga setting ng DNS. Maaari itong maging isang hamon lalo na para sa isang nagsisimula pa lang. Upang madali itong magawa, gamitin ang Domain Connect extension. Ibigay lang ang domain name, at awtomatikong iko-configure ng extension ang mga setting ng DNS para sa iyo.
+
+**Disclaimer:** Sa kasalukuyan, gumagana lang ito para sa piling hanay ng mga hosting provider [listed here](https://www.domainconnect.org). Maaaring marami pa ang ipinapatupad sa feature na ito ng Plesk. Kaya kung hindi mo pa ito na-activate, humihingi kami ng kaunti pang pasensya at pinapahalagahan ang anumang maagang feedback upang maipagpatuloy ang mga pagpapahusay. Kung isa kang DNS Provider o Service Provider na interesado na mag-integrate sa Plesk gamit ang Domain Connect, mangyaring makipag-ugnayan sa [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

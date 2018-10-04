@@ -1,0 +1,7 @@
+Å kjøpe et domenenavn er bare starten på reisen.For å få nettstedet ditt opp på nettet, må du koble det til domenet ditt.
+
+Hvis du har kjøpt et domenenavn fra en registreringsmyndighet og drifter nettstedet hos en annen driftsleverandør, må du kanskje få domenenavnet til å peke mot Plesk-serveren.Hvis domenenavnet ditt allerede peker mot Plesk, ønsker du kanskje å legge flere tredjepartstjenester (for eksempel e-post eller e-handelplattform) til nettstedet.
+
+I begge tilfellene må du konfigurere DNS-innstillingene.Dette kan være en utfordrende oppgave, spesielt for en nybegynner.For enkel fullføring av denne oppgaven, kan du bruke utvidelsen Domain Connect.Bare angi domenenavnet, så vil utvidelsen automatisk konfigurere DNS-innstillingene for deg. 
+
+**Ansvarsfraskrivelse:** For tiden fungerer dette bare for et utvalgt antall driftsleverandører [oppført her](https://www.domainconnect.org). Mange holder på å implementere denne Plesk-funksjonen.Så hvis du ikke har aktivert den enda, ber vi om at du er tålmodig. Vi setter også pris på tilbakemeldinger for å fortsette forbedringsarbeidet.Hvis du er en DNS-leverandør eller en tjenesteleverandør som er interessert i å integrere med Plesk ved hjelp av Domain Connect, ta kontakt med [domainconnect@plesk.com] (mailto:domainconnect@plesk.com).

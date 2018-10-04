@@ -1,0 +1,7 @@
+L'achat d'un nom de domaine n'est que la toute première étape. Pour mettre votre site Web en ligne, vous devez l'associer à votre domaine. 
+
+Si vous avez acheté votre nom de domaine auprès d'un registrar et hébergez votre site Web chez un fournisseur d'hébergement différent, vous devrez peut-être faire pointer le nom de domaine vers votre serveur Plesk. Si votre nom de domaine redirige déjà vers Plesk, vous pouvez souhaiter ajouter des services tiers, par exemple la messagerie ou une plate-forme e-commerce, sur votre site Web. 
+
+Dans les deux cas, il faut configurer les paramètres DNS. Cela peut être difficile, particulièrement pour les novices. Pour faciliter cette tâche, utilisez l'extension Domain Connect. Indiquez simplement le nom de domaine et l'extension se chargera de configurer les paramètres DNS. 
+
+**Exclusion de responsabilité** Pour le moment, cette fonctionnalité n'est disponible que pour certains fournisseurs d'hébergement [consultez la liste](https://www.domainconnect.org). La plupart sont en train de déployer cette fonctionnalité Plesk. Si vous ne pouvez pas déjà en bénéficier, nous faisons appel à votre patience et apprécions vos remarques et suggestions pour améliorer encore davantage nos services. Si vous êtes fournisseur de DNS ou fournisseur de services et êtes intéressé par l'intégration de Plesk avec Domain Connect, contactez [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

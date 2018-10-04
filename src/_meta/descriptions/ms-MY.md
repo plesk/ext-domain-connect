@@ -1,0 +1,7 @@
+Membeli nama domain merupakan suatu permulaan. Untuk meletakkan laman web anda dalam talian, anda perlu mengaitkannya dengan domain anda.
+
+Jika anda telah membeli nama domain daripada pendaftar nama domain dan mengehoskan laman web anda di penyedia pengehosan yang lain, anda mungkin perlu mengarahkan nama domain ke pelayan Plesk anda. Sekiranya nama domain anda sudah diarahkan ke Plesk, anda mungkin mahu menambah perkhidmatan pihak ketiga tambahan (contohnya, mel atau platform e-dagang) ke laman web anda.  
+
+Dalam kedua-dua kes, anda perlu mengkonfigurasi tetapan DNS. Ini boleh menjadi satu tugas yang mencabar, terutamanya untuk orang yang baru belajar. Untuk menjayakan usaha ini dengan mudah, gunakan sambungan Domain Connect. Hanya berikan nama domain dan sambungan tersebut akan mengkonfigurasi tetapan DNS untuk anda secara automatik.
+
+**Penafian:** Pada masa ini, ia hanya boleh digunakan oleh penyedia pengehosan yang terpilih [listed here](https://www.domainconnect.org). Kebanyakannya mungkin masih dalam pelaksanaan ciri-ciri Plesk ini. Jadi jika anda mendapati ia masih belum diaktifkan, kami meminta anda supaya bersabar dan menghargai sebarang maklum balas awal untuk meneruskan penambahbaikan. Jika anda adalah Penyedia DNS atau Penyedia Perkhidmatan yang berminat untuk berintegrasi dengan Plesk menggunakan Domain Connect, sila hubungi [domainconnect@plesk.com](mailto: domainconnect@plesk.com).

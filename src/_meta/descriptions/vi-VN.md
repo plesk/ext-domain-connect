@@ -1,0 +1,7 @@
+Mua một tên miền chỉ là khởi đầu của một cuộc hành trình. Để đưa trang web của bạn lên trực tuyến, bạn cần liên kết trang web với miền của bạn.
+
+Nếu bạn đã mua tên miền từ công ty đăng ký tên miền và lưu trữ trang web của bạn tại một nhà cung cấp dịch vụ lưu trữ khác, bạn có thể cần trỏ tên miền đến máy chủ Plesk của mình. Nếu tên miền của bạn đã trỏ đến Plesk, bạn có thể muốn thêm các dịch vụ bổ sung của bên thứ ba (ví dụ, thư hoặc nền tảng thương mại điện tử) vào trang web.  
+
+Trong cả hai trường hợp, bạn sẽ phải cấu hình các thiết lập DNS. Đây có thể là một công việc khó khăn, đặc biệt đối với người mới bắt đầu. Để thực hiện việc này dễ dàng, hãy sử dụng tiện ích mở rộng Domain Connect. Chỉ cần cung cấp tên miền và tiện ích sẽ tự động định cấu hình cài đặt DNS cho bạn.
+
+**Tuyên bố miễn trừ trách nhiệm:** Hiện tại, tính năng này chỉ hoạt động đối với một số nhà cung cấp dịch vụ lưu trữ đã chọn [listed here](https://www.domainconnect.org). Nhiều nhà cung cấp vẫn có thể đang triển khai tính năng Plesk này. Vì vậy, nếu bạn chưa kích hoạt, chúng tôi mong bạn kiên nhẫn hơn và chúng tôi đánh giá cao bất kỳ phản hồi sớm nào của bạn để chúng tôi tiếp tục cải tiến. nếu bạn là Nhà cung cấp DNS hoặc Nhà cung cấp dịch vụ quan tâm đến việc tích hợp với Plesk bằng cách sử dụng Domain Connect, vui lòng liên hệ [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

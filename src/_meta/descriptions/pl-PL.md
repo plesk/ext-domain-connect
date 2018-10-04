@@ -1,0 +1,7 @@
+Kupno nazwy domeny to tylko początek podróży. Aby umieścić swoją witrynę w Internecie, musisz powiązać ją ze swoją domeną.
+
+Jeśli kupiłeś nazwę domeny od rejestratora i hostujesz swoją witrynę u innego dostawcy hostingu, być może będziesz musiał wskazać nazwę domeny na swoim serwerze Plesk. Jeśli Twoja nazwa domeny wskazuje już na Plesk, możesz dodać do swojej witryny dodatkowe usługi stron trzecich (na przykład pocztę lub platformę e-commerce).  
+
+W obu przypadkach będziesz musiał skonfigurować ustawienia DNS. Może to być trudne zadanie, szczególnie dla początkujących. Aby łatwo wykonać to zadanie, użyj rozszerzenia Domain Connect. Wystarczy podać nazwę domeny, a rozszerzenie automatycznie skonfiguruje ustawienia DNS.
+
+**Zastrzeżenie:** Obecnie działa to tylko dla wybranego zestawu dostawców hostingu [wymienionych tutaj](https://www.domainconnect.org). Wielu dostawców może nadal być dopiero dodawanych. Jeśli więc nie możesz jeszcze skorzystać z tego rozszerzenia, prosimy o cierpliwość i ewentualne opinie. Jeśli jesteś dostawcą DNS lub usługodawcą zainteresowanym integracją z Pleskiem przy użyciu usługi Domain Connect, skontaktuj się z [domainconnect@plesk.com] (mailto: domainconnect@plesk.com).

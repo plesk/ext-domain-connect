@@ -1,0 +1,7 @@
+Membeli nama domain hanya merupakan awal dari perjalanan. Untuk memasang situs web Anda daring, Anda perlu mengaitkannya dengan domain Anda.
+
+Jika Anda sudah membeli nama domain dari registrar dan meng-host situs web Anda di penyedia posting lain, Anda perlu mengarahkan nama domain Anda ke server Plesk. Jika nama domain Anda sudah terarah ke Plesk, Anda perlu menambah layanan pihak ketiga tambahan (misalnya, platform surat atau e-commerce) untuk situs web Anda.  
+
+Dalam kedua kasus, Anda harus mengonfigurasi pengaturan DNS. Ini dapat menjadi tugas yang menantang, khususnya untuk pemula. Untuk menyelesaikan tugas ini dengan mudah, gunakan ekstensi Domain Connect. Cukup sediakan nama, dan ekstensi akan mengonfigurasi pengaturan DNS secara otomatis untuk Anda.
+
+**Penafian:** Saat ini, ini hanya berfungsi untuk kelompok penyedia hosting terpilih [listed here](https://www.domainconnect.org). Banyak yang masih dalam proses implementasi fitur Plesk ini. Jadi jika Anda menemukannya belum diaktivasi, kami memohon Anda untuk bersabar sedikit lagi dan sangat menghargai umpan balik awal untuk melanjutkan penyempurnaan. Jika Anda Penyedia DNS atau Penyedia Layanan yang tertarik untuk mengintegrasikan dengan Plesk menggunakan Domain Connect, silakan menghubungi [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

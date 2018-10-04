@@ -1,0 +1,7 @@
+La compra d'un nom de domini només és el primer pas. Si desitja que el seu lloc web estigui operatiu online caldrà que l'associï amb el seu domini.
+
+Si ja ha adquirit un nom de domini en algun registrador i algun altres proveïdor de hosting ja allotja el seu lloc web, és possible que necessiti apuntar el nom de domini al seu servidor Plesk. Si el seu nom de domini ja apunta a Plesk, pot ser que desitgi afegir algun servei de tercers addicional (com per exemple una plataforma ecommerce o de correu) al seu lloc web.  
+
+En ambdós casos caldrà configurar les opcions del DNS. Això pot resultar tot un repte, especialment si no té gaire coneixements al respecte. En aquest cas pot emprar l'extensió Domain Connect. L'únic que caldrà fer és indicar el nom del domini i l'extensió li configurarà el DNS automàticament.
+
+**Exempció de responsabilitat:** en aquests moments, això només és aplicable en el cas dels proveïdors de hosting [detallats aquí](https://www.domainconnect.org). Molts proveïdors encara estan en procés d'implementació d'aquesta funció de Plesk. Per aquest motiu, si encara no la té activada agraïm esperi. Igualment agrairem qualsevol suggerència que ens pugui ajudar a seguir millorant. Si és un proveïdor de DNS o de serveis i està interessat en iniciar una integració amb Plesk mitjançant Domain Connect, posi's en contacte amb nosaltres escrivint a [domainconnect@plesk.com](mailto:domainconnect@plesk.com).

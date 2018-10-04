@@ -1,0 +1,7 @@
+Der Kauf eines Domainnamens ist erst der erste Schritt. Wenn Sie eine Website online stellen möchten, müssen Sie sie mit Ihrer Domain verknüpfen. 
+
+Falls Sie einen Domainnamen von einem Registrar gekauft haben und für Ihre Website einen anderen Hosting-Provider verwenden, müssen Sie den Domainnamen möglicherweise erst auf Ihren Plesk Server ausrichten. Wenn Sie dies bereits erledigt haben, können Sie nun weitere Drittanbieterservices wie E-Mail oder E-Commerce zu Ihrer Website hinzufügen. 
+
+In dem Fall müssen Sie die DNS-Einstellungen konfigurieren. Dies kann besonders für Nichtexperten eine Herausforderung sein. Verwenden Sie dazu am besten die Erweiterung "Domain Connect". Geben Sie einfach den Domainnamen ein und die DNS-Einstellungen werden automatisch über die Erweiterung konfiguriert. 
+
+**Wichtig:** Derzeit funktioniert dies nur für [bestimme Hosting-Provider](https://www.domainconnect.org). Viele andere Provider arbeiten noch an der Einführung dieser Funktion von Plesk. Falls Ihr Provider nicht angeführt ist, bitten wir Sie um Verständnis und um etwas Geduld. Nachdem Sie die Erweiterung dann ausprobiert haben, würden wir uns über Feedback freuen, da wir Ihre Anregungen für kontinuierliche Produktverbesserungen heranziehen. Wenn Sie ein DNS-Provider oder ein Service-Provider sind und an der Implementierung von Plesk über Domain Connect interessiert sind, wenden Sie sich bitte an [domainconnect@plesk.com](mailto:domainconnect@plesk.com).
