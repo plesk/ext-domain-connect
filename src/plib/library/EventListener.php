@@ -8,12 +8,14 @@ class Modules_DomainConnect_EventListener implements EventListener
         return [
             'domain_create',
             'site_create',
+            'subdomain_create',
+            'site_subdomain_create',
         ];
     }
 
     public function handleEvent($objectType, $objectId, $action, $oldValues, $newValues)
     {
-        if (in_array($action, ['domain_create', 'site_create'])) {
+        if (in_array($action, $this->filterActions())) {
             $domain = \pm_Domain::getByDomainId($objectId);
             $domainConnect = new \PleskExt\DomainConnect\DomainConnect($domain);
 
