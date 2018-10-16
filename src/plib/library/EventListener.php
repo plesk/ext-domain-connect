@@ -8,8 +8,6 @@ class Modules_DomainConnect_EventListener implements EventListener
         return [
             'domain_create',
             'site_create',
-            'subdomain_create',
-            'site_subdomain_create',
         ];
     }
 
