@@ -1,5 +1,6 @@
 <?php
 // Copyright 1999-2018. Plesk International GmbH.
+
 namespace PleskExt\DomainConnect;
 
 class DomainConnect
@@ -32,7 +33,7 @@ class DomainConnect
                 throw new \pm_Exception("Cannot fetch DomainConnect data {$response->getStatus()}: {$response->getMessage()}");
             }
             \pm_Log::debug("DomainConnect response {$response->getStatus()}: {$response->getBody()}");
-            $this->data = \json_decode($response->getBody());
+            $this->data = json_decode($response->getBody());
         }
         return $this->data;
     }
@@ -60,31 +61,35 @@ class DomainConnect
     public function getApplyTemplateUrl($serviceId, array $properties)
     {
         $providerId = \pm_Config::get('providerId');
+
         $properties = array_merge([
             'domain' => $this->domain->getName(),
             'providerName' => \pm_Config::get('providerName'),
         ], $properties);
-        $properties = \http_build_query($properties);
-        return "{$this->getSyncUx()}/v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
-    }
 
-    public function enable()
-    {
-        $this->domain->setSetting('enabled', true);
+        $properties = http_build_query($properties);
+
+        return "{$this->getSyncUx()}v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
     }
 
     public function disable()
     {
-        $this->domain->setSetting('enabled', false);
+        $this->domain->setSetting('enabled', 0);
     }
 
     public function isEnabled()
     {
-        if (!\pm_Config::get('newDomainsOnly')) {
-            return 'false' !== $this->domain->getSetting('enabled');
-        }
+        return (int) $this->domain->getSetting('enabled') > 0;
+    }
 
-        return 'true' === $this->domain->getSetting('enabled');
+    public function isConnected()
+    {
+        return (int) $this->domain->getSetting('connected') > 0;
+    }
+
+    public function isConnectable()
+    {
+        return (int) $this->domain->getSetting('connectable') > 0;
     }
 
     public function getWindowOptions()
@@ -95,5 +100,58 @@ class DomainConnect
             'width' => isset($data->width) ? $data->width : 750,
             'height' => isset($data->height) ? $data->height : 750,
         ];
+    }
+
+    public function getConfigureUrl()
+    {
+        return $this->domain->getSetting('configureUrl');
+    }
+
+    public function init()
+    {
+        if (!$this->domain->hasHosting()) {
+            return;
+        }
+
+        $this->domain->setSetting('enabled', 1);
+        $this->domain->setSetting('connected', 0);
+        $this->domain->setSetting('connectable', 0);
+        $this->domain->setSetting('configureUrl', '');
+        $this->domain->setSetting('configureLinkClicked', 0);
+
+        try {
+            $resolvedIp = Dns::aRecord($this->domain->getName());
+        } catch (\pm_Exception $e) {
+            \pm_Log::err($e);
+
+            $resolvedIp = '';
+        }
+
+        $hostingIps = $this->domain->getIpAddresses();
+
+        if (in_array($resolvedIp, $hostingIps)) {
+            \pm_Log::info("Domain {$this->domain->getDisplayName()} is already resolved to the current server");
+
+            $this->domain->setSetting('connected', 1);
+
+            return;
+        }
+
+        \pm_Log::debug("Domain {$this->domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
+
+        $serviceId = \pm_Config::get('webServiceId');
+
+        try {
+            $url = $this->getApplyTemplateUrl($serviceId, [
+                'ip' => reset($hostingIps),
+            ]);
+        } catch (\pm_Exception $e) {
+            \pm_Log::info($e->getMessage());
+
+            return;
+        }
+
+        $this->domain->setSetting('connectable', 1);
+        $this->domain->setSetting('configureUrl', $url);
     }
 }

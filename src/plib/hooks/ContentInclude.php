@@ -1,7 +1,6 @@
 <?php
 // Copyright 1999-2018. Plesk International GmbH.
 
-use PleskExt\DomainConnect\Dns;
 use PleskExt\DomainConnect\DomainConnect;
 
 class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
@@ -15,9 +14,11 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
+
         if (is_null($request)) {
             return;
         }
+
         $module = $request->getModuleName();
         $controller = $request->getControllerName();
         $action = $request->getActionName();
@@ -73,57 +74,37 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     {
         $domainConnect = new DomainConnect($domain);
 
-        if (!$permanentMessage && !$domainConnect->isEnabled()) {
-            return;
-        }
-        if (!$domain->hasHosting()) {
-            return;
+        if ($permanentMessage) {
+            $domainConnect->init();
         }
 
-        $hostingIps = $domain->getIpAddresses();
-
-        try {
-            $resolvedIp = Dns::aRecord($domain->getName());
-        } catch (\pm_Exception $e) {
-            \pm_Log::err($e);
-            $resolvedIp = '';
-        }
-
-        if (in_array($resolvedIp, $hostingIps)) {
-            \pm_Log::info("Domain {$domain->getDisplayName()} is already resolved to the current server.");
-
-            $domain->setSetting('connected', 1);
-
+        if (!$domainConnect->isEnabled()) {
             return;
         }
 
-        \pm_Log::debug("Domain {$domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
-
-        $domain->setSetting('connected', 0);
-
-        $serviceId = \pm_Config::get('webServiceId');
-
-        try {
-            $url = $domainConnect->getApplyTemplateUrl($serviceId, [
-                'ip' => reset($hostingIps),
-            ]);
-            $options = $domainConnect->getWindowOptions();
-        } catch (\pm_Exception $e) {
-            \pm_Log::info($e->getMessage());
-
-            $domain->setSetting('connectable', 0);
-
+        if ($domainConnect->isConnected()) {
             return;
         }
 
-        $domain->setSetting('connectable', 1);
+        if (!$domainConnect->isConnectable()) {
+            return;
+        }
+
+        $url = $domainConnect->getConfigureUrl();
 
         $message = \pm_Locale::lmsg('message.connect', [
             'domain' => $domain->getDisplayName(),
-            'link' => "<a href=\"{$this->escapeHTML($url)}\">" . \pm_Locale::lmsg('message.link') . "</a>",
+            'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',
         ]);
+
         $closable = !$permanentMessage;
-        $this->warnings[] = [$domain->getId(), $message, $closable, $options];
+
+        $this->warnings[] = [
+            $domain->getId(),
+            $message,
+            $closable,
+            $domainConnect->getWindowOptions(),
+        ];
     }
 
     public function getHeadContent()
