@@ -35,7 +35,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
                 break;
             case 'smb/dns-zone/records-list':
             case 'smb/dns-zone/who-is':
-                $this->addDnsSettingsMessages($request->getParam('id'));
+                $this->addDnsSettingsMessages($request->getParam('id'), $request->getParam('type'));
                 break;
             default:
                 return;
@@ -60,11 +60,19 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
     }
 
-    public function addDnsSettingsMessages($idParam)
+    public function addDnsSettingsMessages($idParam, $typeParam)
     {
-        list($type, $domainId) = explode(':', $idParam, 2);
-        if (in_array($type, ['d', 's']) && is_numeric($domainId)) {
-            $domain = \pm_Domain::getByDomainId($domainId);
+        if (strpos($idParam, ':') !== false) {
+            list($type, $domainId) = explode(':', $idParam, 2);
+
+            if (in_array($type, ['d', 's']) && is_numeric($domainId)) {
+                $domain = \pm_Domain::getByDomainId($domainId);
+
+                $this->handleDomain($domain, true);
+            }
+        } elseif ($typeParam === 'domain') {
+            $domain = \pm_Domain::getByDomainId($idParam);
+
             $this->handleDomain($domain, true);
         }
     }
