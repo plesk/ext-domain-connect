@@ -8,7 +8,6 @@ class Modules_DomainConnect_ConfigDefaults extends pm_Hook_ConfigDefaults
         return [
             'serviceProvider' => true,
             'dnsProvider' => true,
-            'newDomainsOnly' => true,
             'providerId' => 'plesk.com',
             'providerName' => 'Plesk',
             'webServiceId' => 'web',

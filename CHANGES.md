@@ -1,3 +1,7 @@
+# 1.2.0 (16 October 2018)
+
+* [*] Improved performance with a large number of domains
+
 # 1.1.1 (31 July 2018)
 
 * [-] Redirect to javascript:window.open(...) when connecting domain in Firefox

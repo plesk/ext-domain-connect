@@ -13,11 +13,11 @@ class Modules_DomainConnect_EventListener implements EventListener
 
     public function handleEvent($objectType, $objectId, $action, $oldValues, $newValues)
     {
-        switch ($action) {
-            case 'domain_create':
-            case 'site_create':
-                $domainConnect = new \PleskExt\DomainConnect\DomainConnect(\pm_Domain::getByDomainId($objectId));
-                $domainConnect->enable();
+        if (in_array($action, $this->filterActions())) {
+            $domain = \pm_Domain::getByDomainId($objectId);
+            $domainConnect = new \PleskExt\DomainConnect\DomainConnect($domain);
+
+            $domainConnect->init();
         }
     }
 }
