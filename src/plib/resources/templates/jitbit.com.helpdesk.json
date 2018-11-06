@@ -6,7 +6,7 @@
     "version": 1,
     "hostRequired": true,
     "logoUrl": "/modules/domain-connect/logos/jitbit.png",
-    "description": "Enables a domain to work with Jitbit Helpdesk. Only works when host is non-null.",
+    "description": "Enables wdomain to work with Jitbit Helpdesk. Requires a host.",
     "variableDescription": "",
     "records": [
         {

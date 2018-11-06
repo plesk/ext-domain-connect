@@ -3,11 +3,11 @@
     "providerName": "Domain Connect",
     "serviceId": "dynamicdns",
     "serviceName": "Dynamic DNS",
-    "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/cropped-Domain_Connect3.png",
+    "version": 2,
+    "logoUrl": "/modules/domain-connect/logos/DomainConnectSquareBlack.png",
     "description": "Template for Domain Connect Dynamic DNS Service. See https://github.com/Domain-Connect/DomainConnectDDNS for onboarding instructions.",
     "syncBlock": true,
-    "warnPhising": true,
+    "warnPhishing": true,
     "variableDescription": "",
     "records": [
         {

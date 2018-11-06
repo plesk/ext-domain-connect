@@ -1,0 +1,18 @@
+{
+    "providerId": "hubspot.com",
+    "providerName": "HubSpot",
+    "serviceId": "hubspot-prod-web-hosting",
+    "serviceName": "HubSpot Production Site",
+    "version": 1,
+    "logoUrl": "/modules/domain-connect/logos/HubSpot-768x223.png",
+    "description": "Enables a domain to work with the HubSpot CMS",
+    "variableDescription": "DESTINATION: an account-specific subdomain.",
+    "records": [
+        {
+            "type": "CNAME",
+            "host": "@",
+            "pointsTo": "%DESTINATION%.sites.hubspot.net",
+            "ttl": "600"
+        }
+    ]
+}

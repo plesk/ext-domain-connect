@@ -3,12 +3,11 @@
     "providerName": "WPEngine.com",
     "serviceId": "cname",
     "serviceName": "WP Engine Digital Experience Platform",
-    "versoin": 1,
-    "logoUrl": "",
+    "version": 2,
+    "logoUrl": "/modules/domain-connect/logos/LGO-WPEngine-Horiz-reg-RGB-768x146.png",
     "description": "Configure domain record for CNAME entry.",
     "syncBlock": false,
-    "syncPubKeyDomain": "landmark.wpengine.io",
-    "syncRedirectDomain": "my.wpengine.com",
+    "syncPubKeyDomain": "landmark.wpesvc.net",
     "records": [
         {
             "type": "CNAME",
