@@ -1,24 +1,24 @@
-{  
-   "providerId":"gvng.com",
-   "providerName":"GVNG",
-   "serviceId": "hosting_development",
-   "serviceName":"Hosting",
-   "version": 1,
-   "logoUrl":"/modules/domain-connect/logos/gvng-300x115.png",
-   "description":"Enables web hosting for GVNG sites",
-   "variableDescription":"",
-   "records":[  
-      {  
-         "type":"A",
-         "host":"@",
-         "pointsTo": "34.193.11.95",
-         "ttl":"1800"
-      },
-      {  
-         "type":"CNAME",
-         "host":"www",
-         "pointsTo":"@",
-         "ttl":"1800"
-      }
-   ]
+{
+    "providerId": "gvng.com",
+    "providerName": "GVNG",
+    "serviceId": "hosting_development",
+    "serviceName": "Hosting",
+    "version": 1,
+    "logoUrl": "/modules/domain-connect/logos/gvng-300x115.png",
+    "description": "Enables web hosting for GVNG sites",
+    "variableDescription": "",
+    "records": [
+        {
+            "type": "A",
+            "host": "@",
+            "pointsTo": "34.193.11.95",
+            "ttl": "1800"
+        },
+        {
+            "type": "CNAME",
+            "host": "www",
+            "pointsTo": "@",
+            "ttl": "1800"
+        }
+    ]
 }
