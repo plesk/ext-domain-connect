@@ -4,7 +4,7 @@
     "serviceId": "wordpress-services",
     "serviceName": "G-Suite",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/wpcom-horiz.png",
+    "logoUrl": "/modules/domain-connect/logos/WordPress.com.wordpress-services.png",
     "description": "This can be used to set up G-Suite at WordPress.com",
     "syncBlock": true,
     "records": [

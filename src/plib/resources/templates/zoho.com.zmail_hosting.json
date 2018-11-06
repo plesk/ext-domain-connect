@@ -3,7 +3,7 @@
     "providerName": "Zoho",
     "serviceId": "zmail_hosting",
     "serviceName": "Zoho Mail Hosting",
-    "logoUrl": "/modules/domain-connect/logos/mailimage?filename=zoho-logo.png",
+    "logoUrl": "/modules/domain-connect/logos/zoho.com.zmail_hosting.png",
     "description": "This is a template to enable mail hosting with zoho",
     "variableDescription": "",
     "syncBlock": true,

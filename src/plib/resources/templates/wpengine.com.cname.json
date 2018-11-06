@@ -4,7 +4,7 @@
     "serviceId": "cname",
     "serviceName": "WP Engine Digital Experience Platform",
     "version": 2,
-    "logoUrl": "/modules/domain-connect/logos/LGO-WPEngine-Horiz-reg-RGB-768x146.png",
+    "logoUrl": "/modules/domain-connect/logos/wpengine.com.cname.png",
     "description": "Configure domain record for CNAME entry.",
     "syncBlock": false,
     "syncPubKeyDomain": "landmark.wpesvc.net",

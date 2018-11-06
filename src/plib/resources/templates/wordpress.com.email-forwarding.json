@@ -4,7 +4,7 @@
     "serviceId": "email-forwarding",
     "serviceName": "WordPress services",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/wpcom-horiz.png",
+    "logoUrl": "/modules/domain-connect/logos/WordPress.com.email-forwarding.png",
     "description": "This can be used to set up email forwarding at WordPress.com",
     "syncBlock": false,
     "syncRedirectDomain": "wordpress.com",

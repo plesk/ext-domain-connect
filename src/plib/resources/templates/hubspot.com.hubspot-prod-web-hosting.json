@@ -4,7 +4,7 @@
     "serviceId": "hubspot-prod-web-hosting",
     "serviceName": "HubSpot Production Site",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/HubSpot-768x223.png",
+    "logoUrl": "/modules/domain-connect/logos/hubspot.com.hubspot-prod-web-hosting.png",
     "description": "Enables a domain to work with the HubSpot CMS",
     "variableDescription": "DESTINATION: an account-specific subdomain.",
     "records": [

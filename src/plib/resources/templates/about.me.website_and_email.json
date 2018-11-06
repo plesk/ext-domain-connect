@@ -4,7 +4,7 @@
     "serviceId": "website_and_email",
     "serviceName": "Website and Mail",
     "version": 2,
-    "logoUrl": "/modules/domain-connect/logos/about.me_-300x53.png",
+    "logoUrl": "/modules/domain-connect/logos/about.me.website_and_email.png",
     "description": "Enables mail for about me domain.",
     "variableDescription": "",
     "records": [

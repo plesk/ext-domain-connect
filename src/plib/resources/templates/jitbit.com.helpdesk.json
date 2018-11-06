@@ -5,8 +5,8 @@
     "serviceName": "Jitbit Helpdesk Support Site",
     "version": 1,
     "hostRequired": true,
-    "logoUrl": "/modules/domain-connect/logos/jitbit.png",
-    "description": "Enables wdomain to work with Jitbit Helpdesk. Requires a host.",
+    "logoUrl": "/modules/domain-connect/logos/jitbit.com.helpdesk.png",
+    "description": "Enables a domain to work with Jitbit Helpdesk. Only works when host is non-null.",
     "variableDescription": "",
     "records": [
         {

@@ -4,7 +4,7 @@
     "serviceId": "webflow-ssl",
     "serviceName": "Webflow SSL",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/webflow-logo-blue-300x113.jpg",
+    "logoUrl": "/modules/domain-connect/logos/webflow.com.webflow-ssl.jpg",
     "description": "SSL for webflow",
     "variableDescription": "No variables. Static template.",
     "records": [

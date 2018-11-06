@@ -4,7 +4,7 @@
     "serviceId": "site",
     "serviceName": "RightClick Website",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/rightclick.png",
+    "logoUrl": "/modules/domain-connect/logos/rightclick.io.site.png",
     "description": "Enables a domain to work with RightClick.io Websites",
     "variableDescription": "v1 is the numeric cluster within wix for hosting the site.",
     "records": [

@@ -12,9 +12,10 @@ function emptyDir($dir)
     }
 }
 
-function downloadLogo($url, $dir)
+function downloadLogo($url, $dir, $providerId, $serviceId)
 {
-    $basename = basename($url);
+    $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+    $basename = $providerId . '.' . $serviceId . '.' . $ext;
     $file = $dir . '/' . $basename;
 
     if (!is_file($file)) {
@@ -55,7 +56,7 @@ if ($zip->open($archiveFile) === true) {
         $data = json_decode($json, true);
 
         if ($data['logoUrl'] !== '') {
-            $data['logoUrl'] = downloadLogo($data['logoUrl'], $logoDir);
+            $data['logoUrl'] = downloadLogo($data['logoUrl'], $logoDir, $data['providerId'], $data['serviceId']);
         }
 
         file_put_contents(

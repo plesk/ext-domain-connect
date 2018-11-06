@@ -4,7 +4,7 @@
     "serviceId": "dynamicdns",
     "serviceName": "Dynamic DNS",
     "version": 2,
-    "logoUrl": "/modules/domain-connect/logos/DomainConnectSquareBlack.png",
+    "logoUrl": "/modules/domain-connect/logos/domainconnect.org.dynamicdns.png",
     "description": "Template for Domain Connect Dynamic DNS Service. See https://github.com/Domain-Connect/DomainConnectDDNS for onboarding instructions.",
     "syncBlock": true,
     "warnPhishing": true,

@@ -4,7 +4,7 @@
     "serviceId": "wixsites",
     "serviceName": "Wix Websites",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/wix-300x103.png",
+    "logoUrl": "/modules/domain-connect/logos/wix.com.wixsites.png",
     "description": "Enables a domain to work with Wix Websites",
     "variableDescription": "v1 is the numeric cluster within wix for hosting the site.",
     "records": [

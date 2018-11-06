@@ -6,7 +6,7 @@
     "version": 2,
     "syncPubKeyDomain": "exampleservice.domainconnect.org",
     "syncRedirectDomain": "exampleservice.domainconnect.org",
-    "logoUrl": "/modules/domain-connect/logos/DomainConnectSquareBlack.png",
+    "logoUrl": "/modules/domain-connect/logos/exampleservice.domainconnect.org.template2.png",
     "description": "Example service for stateless hosting, alternative template",
     "variableDescription": "IP is the IP address of the service A record. RANDOMTEXT is the value for a TXT record in DNS. Should be prefixed with shm:.",
     "records": [

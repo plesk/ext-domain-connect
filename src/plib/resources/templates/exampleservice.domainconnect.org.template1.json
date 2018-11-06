@@ -4,7 +4,7 @@
     "serviceId": "template1",
     "serviceName": "Stateless Hosting Primary",
     "version": 2,
-    "logoUrl": "/modules/domain-connect/logos/DomainConnectSquareBlack.png",
+    "logoUrl": "/modules/domain-connect/logos/exampleservice.domainconnect.org.template1.png",
     "description": "Example service for stateless hosting",
     "syncRedirectDomain": "exampleservice.domainconnect.org",
     "warnPhishing": true,

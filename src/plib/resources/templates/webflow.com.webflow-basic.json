@@ -4,7 +4,7 @@
     "serviceId": "webflow-basic",
     "serviceName": "Webflow Site",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/webflow-logo-blue-300x113.jpg",
+    "logoUrl": "/modules/domain-connect/logos/webflow.com.webflow-basic.jpg",
     "description": "Enables a domain to work with Webflow",
     "variableDescription": "No variables. Static template.",
     "records": [

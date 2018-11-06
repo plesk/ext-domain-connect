@@ -4,7 +4,7 @@
     "serviceId": "mwp2",
     "serviceName": "Managed WordPress",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/godaddy-logo-300x79.png",
+    "logoUrl": "/modules/domain-connect/logos/godaddy.com.mwp2.png",
     "description": "Enables a domain to work with GoDaddy MWP2",
     "variableDescription": "v1 is the IP address of the server.",
     "syncPubKeyDomain": "mwp2.godaddy.com",

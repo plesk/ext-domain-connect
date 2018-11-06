@@ -4,7 +4,7 @@
     "serviceId": "website",
     "serviceName": "Hosting",
     "version": 2,
-    "logoUrl": "/modules/domain-connect/logos/about.me_-300x53.png",
+    "logoUrl": "/modules/domain-connect/logos/about.me.website.png",
     "description": "Enables web hosting for about me domains.",
     "variableDescription": "",
     "records": [

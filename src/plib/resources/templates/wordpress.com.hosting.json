@@ -4,7 +4,7 @@
     "serviceId": "hosting",
     "serviceName": "WordPress services",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/wpcom-horiz.png",
+    "logoUrl": "/modules/domain-connect/logos/WordPress.com.hosting.png",
     "description": "This can be used to set up website hosting at WordPress.com",
     "syncBlock": false,
     "syncRedirectDomain": "wordpress.com",

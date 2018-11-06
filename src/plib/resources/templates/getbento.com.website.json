@@ -4,7 +4,7 @@
     "serviceId": "website",
     "serviceName": "BentoBox Site",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/Color_Horizontalcopy-high-res-01-768x242.png",
+    "logoUrl": "/modules/domain-connect/logos/getbento.com.website.png",
     "description": "Configures a domain for use with BentoBox",
     "records": [
         {

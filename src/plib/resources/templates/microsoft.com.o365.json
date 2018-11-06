@@ -4,7 +4,7 @@
     "serviceId": "O365",
     "serviceName": "Microsoft Office 365",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/microsoft-300x89.jpg",
+    "logoUrl": "/modules/domain-connect/logos/microsoft.com.O365.jpg",
     "description": "Enables a domain to work with Microsoft Office 365",
     "variableDescription": "Self explanatory in the variable names.",
     "syncBlock": false,

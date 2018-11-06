@@ -4,7 +4,7 @@
     "serviceId": "arecord",
     "serviceName": "WP Engine Digital Experience Platform",
     "version": 2,
-    "logoUrl": "/modules/domain-connect/logos/LGO-WPEngine-Horiz-reg-RGB-768x146.png",
+    "logoUrl": "/modules/domain-connect/logos/wpengine.com.arecord.png",
     "description": "Configure ip address for the domain A record.",
     "syncBlock": false,
     "syncPubKeyDomain": "landmark.wpesvc.net",

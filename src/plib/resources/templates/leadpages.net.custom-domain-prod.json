@@ -4,7 +4,7 @@
     "serviceId": "custom-domain-prod",
     "serviceName": "Leadpages Custom Domain",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/logo_icon.svg",
+    "logoUrl": "/modules/domain-connect/logos/leadpages.net.custom-domain-prod.svg",
     "description": "Enables a domain to work with Leadpages",
     "variableDescription": "HOST: The subdomain for the domain.",
     "hostRequired": true,

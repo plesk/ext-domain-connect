@@ -4,7 +4,7 @@
     "serviceId": "website",
     "serviceName": "Shopify Site",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/shopify.png",
+    "logoUrl": "/modules/domain-connect/logos/Shopify.com.website.png",
     "description": "Enables a domain to work with Shopify",
     "variableDescription": "v1 is the shopify hosted domain name and verification is the verification code for the site",
     "records": [

@@ -4,7 +4,7 @@
     "serviceId": "website",
     "serviceName": "WiseStamp Website",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/wisestamp_logo-help.png",
+    "logoUrl": "/modules/domain-connect/logos/wisestamp.com.website.png",
     "description": "Enables a domain to work with WiseStamp",
     "variableDescription": "No variables. Static template.",
     "records": [

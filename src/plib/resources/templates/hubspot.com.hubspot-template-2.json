@@ -4,7 +4,7 @@
     "serviceId": "hubspot-template-2",
     "serviceName": "HubSpot Site",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/HubSpot-768x223.png",
+    "logoUrl": "/modules/domain-connect/logos/hubspot.com.hubspot-template-2.png",
     "description": "Enables a domain to work with HubSpot",
     "variableDescription": "v1 is the customer id.",
     "records": [
