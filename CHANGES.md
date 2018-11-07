@@ -1,6 +1,7 @@
 # 1.2.0 (16 October 2018)
 
 * [*] Improved performance with a large number of domains
+* [*] Updated templates
 
 # 1.1.1 (31 July 2018)
 
