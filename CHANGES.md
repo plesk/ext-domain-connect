@@ -3,6 +3,7 @@
 * [*] Improved performance with a large number of domains
 * [*] Translated the extension and its description into several new languages
 * [*] Updated Domain Connect logo
+* [*] Updated templates
 
 # 1.1.1 (31 July 2018)
 

@@ -1,20 +1,19 @@
 {
-   "providerId":"wpengine.com",
-   "providerName":"WPEngine.com",
-   "serviceId":"cname",
-   "serviceName":"WP Engine Digital Experience Platform",
-   "versoin": 1,
-   "logoUrl":"https://wpengine.com/logo.png",
-   "description":"Configure domain record for CNAME entry.",
-   "syncBlock":false,
-   "syncPubKeyDomain": "landmark.wpengine.io",
-   "syncRedirectDomain": "my.wpengine.com",
-   "records":[
-      {
-         "type":"CNAME",
-         "host":"@",
-         "pointsTo":"%site%.wpengine.com",
-         "ttl":"3600"
-      }
-   ]
+    "providerId": "wpengine.com",
+    "providerName": "WPEngine.com",
+    "serviceId": "cname",
+    "serviceName": "WP Engine Digital Experience Platform",
+    "version": 2,
+    "logoUrl": "/modules/domain-connect/logos/wpengine.com.cname.png",
+    "description": "Configure domain record for CNAME entry.",
+    "syncBlock": false,
+    "syncPubKeyDomain": "landmark.wpesvc.net",
+    "records": [
+        {
+            "type": "CNAME",
+            "host": "@",
+            "pointsTo": "%site%.wpengine.com",
+            "ttl": "3600"
+        }
+    ]
 }
