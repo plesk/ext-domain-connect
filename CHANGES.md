@@ -1,4 +1,4 @@
-# 1.2.0 (06 November 2018)
+# 1.1.2 (20 November 2018)
 
 * [*] Improved performance with a large number of domains
 * [*] Translated the extension and its description into several new languages
