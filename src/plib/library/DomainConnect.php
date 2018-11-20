@@ -55,7 +55,7 @@ class DomainConnect
 
     public function getSyncUx()
     {
-        return $this->getData()->urlSyncUX;
+        return rtrim($this->getData()->urlSyncUX, '/');
     }
 
     public function getApplyTemplateUrl($serviceId, array $properties)
@@ -69,7 +69,7 @@ class DomainConnect
 
         $properties = http_build_query($properties);
 
-        return "{$this->getSyncUx()}v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
+        return "{$this->getSyncUx()}/v2/domainTemplates/providers/{$providerId}/services/{$serviceId}/apply?{$properties}";
     }
 
     public function disable()
