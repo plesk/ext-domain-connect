@@ -55,6 +55,10 @@ if ($zip->open($archiveFile) === true) {
         $json = $zip->getFromIndex($i);
         $data = json_decode($json, true);
 
+        if ($data === null) {
+            continue;
+        }
+
         if ($data['logoUrl'] !== '') {
             $data['logoUrl'] = downloadLogo($data['logoUrl'], $logoDir, $data['providerId'], $data['serviceId']);
         }
