@@ -56,6 +56,8 @@ if ($zip->open($archiveFile) === true) {
         $data = json_decode($json, true);
 
         if ($data === null) {
+            echo 'JSON syntax error in ' . $path . PHP_EOL;
+
             continue;
         }
 
