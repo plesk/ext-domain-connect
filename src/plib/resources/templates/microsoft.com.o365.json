@@ -9,10 +9,17 @@
     "variableDescription": "Self explanatory in the variable names.",
     "syncBlock": false,
     "shared": false,
-    "warnPhishing": false,
+    "warnPhishing": true,
     "syncPubKeyDomain": "portal.office.com",
     "syncRedirectDomain": "",
     "records": [
+        {
+            "groupId": "Login",
+            "type": "CNAME",
+            "host": "email",
+            "pointsTo": "%loginhost%",
+            "ttl": "3600"
+        },
         {
             "groupId": "Outlook",
             "type": "MX",
