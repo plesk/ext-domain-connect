@@ -1,3 +1,7 @@
+# 1.2.0 (14 January 2019)
+
+* [*] The /settings call returns a response that indicates the domain does not belong to the DNS provider.
+
 # 1.1.3 (27 December 2018)
 
 * [*] Updated templates
