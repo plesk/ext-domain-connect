@@ -21,24 +21,7 @@ try {
     exit;
 }
 
-$apiClient = new \PleskX\Api\InternalClient;
-$nameServers = [];
-
-try {
-    $dnsRecords = $apiClient->dns()->getAll('site-id', $pmDomain->getId());
-
-    foreach ($dnsRecords as $dnsRecord) {
-        if ($dnsRecord->type !== 'NS') {
-            continue;
-        }
-
-        $nameServers[] = rtrim($dnsRecord->value, '.');
-    }
-} catch (\Exception $e) {
-    \pm_Log::err($e->getMessage());
-}
-
-sort($nameServers);
+$domainDns = new \PleskExt\DomainConnect\DomainDns($pmDomain);
 
 $data = array_filter([
     'providerId' => pm_Config::get('providerId'),
@@ -48,6 +31,6 @@ $data = array_filter([
     'urlAPI' => 'https://' . $_SERVER['HTTP_HOST'] . '/modules/domain-connect/index.php/',
     'width' => 750,
     'height' => 750,
-    'nameServers' => $nameServers,
+    'nameServers' => $domainDns->getNameServers(),
 ]);
 echo json_encode($data);
