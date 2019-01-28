@@ -1,3 +1,7 @@
+# 1.2.1 (28 January 2019)
+
+* [+] Added nameservers to the JSON API
+
 # 1.2.0 (14 January 2019)
 
 * [*] The /settings call returns a response that indicates the domain does not belong to the DNS provider.
