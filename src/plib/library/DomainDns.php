@@ -141,6 +141,33 @@ class DomainDns
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getNameServers()
+    {
+        $apiClient = new Api\InternalClient();
+        $nameServers = [];
+
+        try {
+            $dnsRecords = $apiClient->dns()->getAll('site-id', $this->domain->getId());
+
+            foreach ($dnsRecords as $dnsRecord) {
+                if ($dnsRecord->type !== 'NS') {
+                    continue;
+                }
+
+                $nameServers[] = rtrim($dnsRecord->value, '.');
+            }
+        } catch (\Exception $e) {
+            \pm_Log::err($e->getMessage());
+        }
+
+        sort($nameServers);
+
+        return $nameServers;
+    }
+
     public static function fullHost($fqdn, $host)
     {
         $fqdn = rtrim($fqdn, '.');

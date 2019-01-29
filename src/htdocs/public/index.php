@@ -21,6 +21,8 @@ try {
     exit;
 }
 
+$domainDns = new \PleskExt\DomainConnect\DomainDns($pmDomain);
+
 $data = array_filter([
     'providerId' => pm_Config::get('providerId'),
     'providerName' => pm_Config::get('providerName'),
@@ -29,5 +31,6 @@ $data = array_filter([
     'urlAPI' => 'https://' . $_SERVER['HTTP_HOST'] . '/modules/domain-connect/index.php/',
     'width' => 750,
     'height' => 750,
+    'nameServers' => $domainDns->getNameServers(),
 ]);
 echo json_encode($data);
