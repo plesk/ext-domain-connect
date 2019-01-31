@@ -94,11 +94,9 @@ class DomainConnect
 
     public function getWindowOptions()
     {
-        $data = $this->getData();
-
         return [
-            'width' => isset($data->width) ? $data->width : 750,
-            'height' => isset($data->height) ? $data->height : 750,
+            'width' => (int) $this->domain->getSetting('windowOptionWidth', 750),
+            'height' => (int) $this->domain->getSetting('windowOptionHeight', 750),
         ];
     }
 
@@ -153,5 +151,10 @@ class DomainConnect
 
         $this->domain->setSetting('connectable', 1);
         $this->domain->setSetting('configureUrl', $url);
+
+        if (isset($this->getData()->width, $this->getData()->height)) {
+            $this->domain->setSetting('windowOptionWidth', $this->getData()->width);
+            $this->domain->setSetting('windowOptionHeight', $this->getData()->height);
+        }
     }
 }
