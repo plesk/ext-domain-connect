@@ -1,4 +1,4 @@
-# 1.2.1 (28 January 2019)
+# 1.3.0 (06 March 2019)
 
 * [+] Added nameservers to the JSON API
 
