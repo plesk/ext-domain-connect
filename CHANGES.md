@@ -1,6 +1,6 @@
 # 1.3.0 (06 March 2019)
 
-* [+] Added nameservers to the JSON API
+* [+] The extension now adds the "nameServers" key to JSON returned to a domain's third-party service. This helps the service provider identify that Plesk is the authoritative DNS provider for the domain.
 
 # 1.2.0 (14 January 2019)
 
