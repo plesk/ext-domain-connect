@@ -72,7 +72,13 @@ class V2Controller extends pm_Controller_Action
 
         $changes = $template->testRecords($domain, $this->getGroupsFilter(), $this->getSubstParams($domain));
         if ($this->getRequest()->isPost()) {
+            \pm_Log::debug("Apply changes to DNS zone for domain {$domain->getName()}");
+
+            $domain->setSetting('dns-apply-try-count', (int) $domain->getSetting('apply-try-count',0)+1);
             $template->applyChanges($domain, $changes);
+            $domain->setSetting('dns-for-provider-name', $provider);
+            $domain->setSetting('dns-for-provider-template', $service);
+            $domain->setSetting('dns-apply-success-count', (int) $domain->getSetting('apply-success-count',0)+1);
 
             $this->forward('success');
             // render view of successAction using view's variables below

@@ -11,6 +11,9 @@ class Modules_DomainConnect_CustomInfo implements pm_Hook_Interface
         $stats = [
             'connectedDomains' => 0,
             'potentialConnectableDomains' => 0,
+            'dns-apply-try-count' => 0,
+            'dns-apply-success-count' => 0,
+            'dns-provider' => []
         ];
 
         foreach (pm_Domain::getAllDomains() as $domain) {
@@ -25,7 +28,12 @@ class Modules_DomainConnect_CustomInfo implements pm_Hook_Interface
             if ($connectable && !$connected) {
                 $stats['potentialConnectableDomains']++;
             }
+
+            $stats['dns-apply-try-count'] += (int) $domain->getSetting('dns-apply-try-count', 0);
+            $stats['dns-apply-success-count'] += (int) $domain->getSetting('dns-apply-success-count', 0);
+            $stats['dns-provider'][$domain->getSetting('dns-for-provider-name', "")][$domain->getSetting('dns-for-provider-template', "")]++;
         }
+        unset($stats['dns-provider'][""][""]);
 
         return $stats;
     }
