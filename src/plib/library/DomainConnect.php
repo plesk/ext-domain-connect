@@ -120,7 +120,7 @@ class DomainConnect
         try {
             $resolvedIp = Dns::aRecord($this->domain->getName());
         } catch (\pm_Exception $e) {
-            \pm_Log::err($e);
+            \pm_Log::warn($e);
 
             $resolvedIp = '';
         }
