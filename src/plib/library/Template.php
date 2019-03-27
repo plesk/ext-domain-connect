@@ -64,7 +64,6 @@ class Template
         $records = (new DomainDns($domain))->getRecords();
         foreach ($records as $record) {
             switch ($record->type) {
-                case 'CNAME':
                 case 'NS':
                 case 'MX':
                     if (isset($record->pointsTo)) {
