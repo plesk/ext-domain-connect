@@ -41,7 +41,7 @@ class Modules_DomainConnect_CustomInfo implements pm_Hook_Interface
                 $stats['dns-provider'][$providerName][$providerTemplate]++;
             }
         }
-        unset($stats['dns-provider'][""][""]);
+        unset($stats['dns-provider'][""]);
 
         return $stats;
     }
