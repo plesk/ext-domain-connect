@@ -24,6 +24,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         $action = $request->getActionName();
 
         switch ("{$module}/{$controller}/${action}") {
+//            https://134.209.228.146:8443/smb/mail-settings/edit/id/30/domainId/30
+//            https://134.209.228.146:8443/smb/email-address/list/domainId/30
             case 'smb/web/view':
             case 'smb/web/overview':
                 // "Websites & Domains" page
@@ -37,6 +39,11 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             case 'smb/dns-zone/records-list':
             case 'smb/dns-zone/who-is':
                 $this->addDnsSettingsMessages($request->getParam('id'), $request->getParam('type'));
+                break;
+            case 'smb/mail-settings/edit':
+            case 'smb/email-address/list':
+                // Mail settings and emails list
+                $this->getMailServiceMessage($request->getParam('id'));
                 break;
             default:
                 return;
@@ -67,20 +74,74 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             list($type, $domainId) = explode(':', $idParam, 2);
 
             if (in_array($type, ['d', 's']) && is_numeric($domainId)) {
-                $domain = \pm_Domain::getByDomainId($domainId);
+                try {
+                    $domain = \pm_Domain::getByDomainId($domainId);
+                } catch (pm_Exception $e) {
+                    \pm_Log::warn($e);
+                }
 
                 $this->handleDomain($domain, true);
             }
         } elseif ($typeParam === 'domain') {
-            $domain = \pm_Domain::getByDomainId($idParam);
+            try {
+                $domain = \pm_Domain::getByDomainId($idParam);
+            } catch (pm_Exception $e) {
+                \pm_Log::warn($e);
+            }
 
             $this->handleDomain($domain, true);
         }
     }
 
+    public function getMailServiceMessage($domainId, $permanentMessage = false)
+    {
+        try {
+            $domain = \pm_Domain::getByDomainId($domainId);
+        } catch (pm_Exception $e) {
+            pm_Log::warn($e);
+            return;
+        }
+        $domainConnect = new DomainConnect($domain, \pm_Config::get('mailServiceId'));
+
+        if ($permanentMessage) {
+            $domainConnect->init();
+        }
+
+        if (!$domainConnect->isEnabled()) {
+            return;
+        }
+
+        if ($domainConnect->isConnected('mail')) {
+            return;
+        }
+
+        if (!$domainConnect->isConnectable('mail')) {
+            return;
+        }
+
+        $url = $domainConnect->getConfigureUrl('mail');
+
+        $message = \pm_Locale::lmsg(
+            'message.connect',
+            [
+                'domain' => $domain->getDisplayName(),
+                'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',
+            ]
+        );
+
+        $closable = !$permanentMessage;
+
+        $this->warnings[] = [
+            $domain->getId(),
+            $message,
+            $closable,
+            $domainConnect->getWindowOptions(),
+        ];
+    }
+
     private function handleDomain(\pm_Domain $domain, $permanentMessage = false)
     {
-        $domainConnect = new DomainConnect($domain);
+        $domainConnect = new DomainConnect($domain, \pm_Config::get('webServiceId'));
 
         if ($permanentMessage) {
             $domainConnect->init();
@@ -98,12 +159,15 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             return;
         }
 
-        $url = $domainConnect->getConfigureUrl();
+        $url = $domainConnect->getConfigureUrl('web');
 
-        $message = \pm_Locale::lmsg('message.connect', [
+        $message = \pm_Locale::lmsg(
+            'message.connect',
+            [
             'domain' => $domain->getDisplayName(),
             'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',
-        ]);
+            ]
+        );
 
         $closable = !$permanentMessage;
 
