@@ -100,10 +100,13 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
         $url = $domainConnect->getConfigureUrl();
 
-        $message = \pm_Locale::lmsg('message.connect', [
+        $message = \pm_Locale::lmsg(
+            'message.connect',
+            [
             'domain' => $domain->getDisplayName(),
             'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',
-        ]);
+            ]
+        );
 
         $closable = !$permanentMessage;
 

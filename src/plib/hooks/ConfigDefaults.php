@@ -10,7 +10,11 @@ class Modules_DomainConnect_ConfigDefaults extends pm_Hook_ConfigDefaults
             'dnsProvider' => true,
             'providerId' => 'plesk.com',
             'providerName' => 'Plesk',
-            'webServiceId' => 'web',
+            'ServiceId' => 'web',
+            'mailServiceGroupId' => 'MailService',
+            'webServiceGroupId' => 'WebService',
+            'webMailServiceGroupId' => 'Webmail',
+            'spfServiceGroupId' => 'Verification',
         ];
     }
 }

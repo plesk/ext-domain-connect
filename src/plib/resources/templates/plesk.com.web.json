@@ -10,15 +10,46 @@
     "variableDescription": "ip is the IP address of the server.",
     "records": [
         {
+            "groupId": "WebService",
             "type": "A",
             "host": "@",
             "pointsTo": "%ip%",
             "ttl": "600"
         },
         {
+            "groupId": "WebService",
             "type": "CNAME",
             "host": "www",
             "pointsTo": "@",
+            "ttl": "600"
+        },
+        {
+            "groupId": "MailService",
+            "type": "MX",
+            "pointsTo": "%mxhost%",
+            "host": "@",
+            "priority": "%mxpriority%",
+            "ttl": "600"
+        },
+        {
+            "groupId": "MailService",
+            "type": "A",
+            "host": "%mxhost%",
+            "pointsTo": "%mxip%",
+            "ttl": "600"
+        },
+        {
+            "groupId": "Verification",
+            "type": "TXT",
+            "host": "@",
+            "data": "%spftxt%",
+            "ttl": "600"
+        },
+        {
+            "groupId": "Webmail",
+            "type": "A",
+            "host": "webmail.@",
+            "pointsTo": "%webmailip%",
             "ttl": "600"
         }
     ]
