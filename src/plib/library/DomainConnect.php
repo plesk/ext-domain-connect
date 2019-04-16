@@ -17,7 +17,7 @@ class DomainConnect
     private function getData()
     {
         if (null === $this->urlPrefix) {
-            $this->urlPrefix = $this->fetchUrlPrefix($this->domain->getName());
+            $this->urlPrefix = $this->fetchUrlPrefix($this->getRootDomainName());
             \pm_Log::debug("TXT _domainconnect: {$this->urlPrefix}");
         }
         if (null === $this->data) {
@@ -63,7 +63,7 @@ class DomainConnect
         $providerId = \pm_Config::get('providerId');
 
         $properties = array_merge([
-            'domain' => $this->domain->getName(),
+            'domain' => $this->getRootDomainName(),
             'providerName' => \pm_Config::get('providerName'),
         ], $properties);
 
@@ -138,11 +138,14 @@ class DomainConnect
         \pm_Log::debug("Domain {$this->domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
 
         $serviceId = \pm_Config::get('webServiceId');
+        $properties = ['ip' => reset($hostingIps)];
+        if ($this->domainHasParent()) {
+            $properties['host'] = DomainDns::relativeHost($this->getRootDomainName(), $this->domain->getName());
+            $properties['groupId'] = 'web';
+        }
 
         try {
-            $url = $this->getApplyTemplateUrl($serviceId, [
-                'ip' => reset($hostingIps),
-            ]);
+            $url = $this->getApplyTemplateUrl($serviceId, $properties);
         } catch (\pm_Exception $e) {
             \pm_Log::info($e->getMessage());
 
@@ -156,5 +159,21 @@ class DomainConnect
             $this->domain->setSetting('windowOptionWidth', $this->getData()->width);
             $this->domain->setSetting('windowOptionHeight', $this->getData()->height);
         }
+    }
+
+    /**
+     * @throws \pm_Exception
+     */
+    private function getRootDomainName()
+    {
+        $parentDomainId = (int)$this->domain->getProperty('parentDomainId');
+        $rootDomain = $parentDomainId === 0 ? $this->domain : \pm_Domain::getByDomainId($parentDomainId);
+
+        return $rootDomain->getName();
+    }
+
+    private function domainHasParent()
+    {
+        return (int)$this->domain->getProperty('parentDomainId') !== 0;
     }
 }
