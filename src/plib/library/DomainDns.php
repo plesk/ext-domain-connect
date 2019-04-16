@@ -56,39 +56,42 @@ class DomainDns
 
     public function formatRecordForAPI(\pm_Domain $domain, \stdClass $record)
     {
+        $parentDomainId = (int)$domain->getProperty('parentDomainId');
+        $rootDomain = $parentDomainId > 0 ? \pm_Domain::getByDomainId($parentDomainId) : $domain;
+
         switch ($record->type) {
             case 'A':
             case 'AAAA':
             case 'CNAME':
             case 'NS':
                 return [
-                    'site-id' => $domain->getId(),
+                    'site-id' => $rootDomain->getId(),
                     'type' => $record->type,
-                    'host' => static::relativeHost($domain->getName(), $record->host),
+                    'host' => static::relativeHost($rootDomain->getName(), $record->host),
                     'value' => $record->pointsTo,
                     'opt' => '',
                 ];
             case 'MX':
                 return [
-                    'site-id' => $domain->getId(),
+                    'site-id' => $rootDomain->getId(),
                     'type' => $record->type,
-                    'host' => static::relativeHost($domain->getName(), $record->host),
+                    'host' => static::relativeHost($rootDomain->getName(), $record->host),
                     'value' => $record->pointsTo,
                     'opt' => $record->priority,
                 ];
             case 'TXT':
                 return [
-                    'site-id' => $domain->getId(),
+                    'site-id' => $rootDomain->getId(),
                     'type' => $record->type,
-                    'host' => static::relativeHost($domain->getName(), $record->host),
+                    'host' => static::relativeHost($rootDomain->getName(), $record->host),
                     'value' => $record->data,
                     'opt' => '',
                 ];
             case 'SRV':
                 return [
-                    'site-id' => $domain->getId(),
+                    'site-id' => $rootDomain->getId(),
                     'type' => $record->type,
-                    'host' => static::relativeHost($domain->getName(), "{$record->service}.{$record->protocol}.{$record->name}"),
+                    'host' => static::relativeHost($rootDomain->getName(), "{$record->service}.{$record->protocol}.{$record->name}"),
                     'value' => $record->target,
                     'opt' => "{$record->priority} {$record->weight} {$record->port}",
                 ];

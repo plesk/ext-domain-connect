@@ -17,7 +17,7 @@ class DomainConnect
     private function getData()
     {
         if (null === $this->urlPrefix) {
-            $this->urlPrefix = $this->fetchUrlPrefix($this->domain->getName());
+            $this->urlPrefix = $this->fetchUrlPrefix($this->getRootDomainName());
             \pm_Log::debug("TXT _domainconnect: {$this->urlPrefix}");
         }
         if (null === $this->data) {
@@ -156,5 +156,16 @@ class DomainConnect
             $this->domain->setSetting('windowOptionWidth', $this->getData()->width);
             $this->domain->setSetting('windowOptionHeight', $this->getData()->height);
         }
+    }
+
+    /**
+     * @throws \pm_Exception
+     */
+    private function getRootDomainName()
+    {
+        $parentDomainId = (int)$this->domain->getProperty('parentDomainId');
+        $rootDomain = $parentDomainId === 0 ? $this->domain : \pm_Domain::getByDomainId($parentDomainId);
+
+        return $rootDomain->getName();
     }
 }

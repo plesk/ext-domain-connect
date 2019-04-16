@@ -62,6 +62,12 @@ class Template
     private function getDomainRecords(\pm_Domain $domain)
     {
         $records = (new DomainDns($domain))->getRecords();
+        $parentDomainId = (int)$domain->getProperty('parentDomainId');
+        if ($parentDomainId > 0) {
+            $parentDomain = \pm_Domain::getByDomainId($parentDomainId);
+            $records = array_merge($records, (new DomainDns($parentDomain))->getRecords());
+        }
+
         foreach ($records as $record) {
             switch ($record->type) {
                 case 'NS':
