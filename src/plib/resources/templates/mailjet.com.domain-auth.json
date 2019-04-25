@@ -3,16 +3,15 @@
     "providerName": "Mailjet",
     "serviceId": "domain-auth",
     "serviceName": "Mailjet Email Service",
-    "version": 1,
+    "version": 2,
     "logoUrl": "/modules/domain-connect/logos/mailjet.com.domain-auth.png",
     "description": "Configure Mailjet's SPF and DKIM records to improve sender reputation and deliverability",
     "variableDescription": "",
     "records": [
         {
-            "type": "TXT",
+            "type": "SPFM",
             "host": "@",
-            "data": "v=spf1%spftxt%",
-            "ttl": "3600"
+            "spfRules": "include:spf.mailjet.com"
         },
         {
             "type": "TXT",
