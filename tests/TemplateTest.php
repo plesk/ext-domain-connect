@@ -87,4 +87,46 @@ class TemplateTest extends PHPUnit\Framework\TestCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider dataApplySpfm
+     * @param string $spfRules
+     * @param string $domainSpf
+     * @param string $newSpf
+     */
+    public function testApplySpfm($spfRules, $domainSpf, $newSpf)
+    {
+        $this->assertEquals($newSpf, Template::applySpfm($spfRules, $domainSpf));
+    }
+
+    public function dataApplySpfm()
+    {
+        return [
+            [
+                'include:spf.mailer1.com',
+                null,
+                'v=spf1 include:spf.mailer1.com -all'
+            ],
+            [
+                'include:_spf.newsletter.net',
+                'v=spf1 include:spf.mailer1.com -all',
+                'v=spf1 include:spf.mailer1.com include:_spf.newsletter.net -all'
+            ],
+            [
+                'include:spf.mailer1.com',
+                'v=spf1 include:_spf.newsletter.net ~all',
+                'v=spf1 include:_spf.newsletter.net include:spf.mailer1.com ~all'
+            ],
+            [
+                'include:spf.mailer1.com',
+                'v=spf1 include:spf.mailer1.com -all',
+                'v=spf1 include:spf.mailer1.com -all'
+            ],
+            [
+                'a include:spf.hoster.com',
+                'v=spf1 +a +mx +a:szorin-hungry-galileo.plesk.space -all',
+                'v=spf1 +a +mx +a:szorin-hungry-galileo.plesk.space include:spf.hoster.com -all'
+            ],
+        ];
+    }
 }

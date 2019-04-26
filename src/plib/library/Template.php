@@ -31,7 +31,7 @@ class Template
             'toAdd' => [],
             'toRemove' => [],
         ];
-        foreach ($this->getTemplateRecords($groups, $parameters) as $record) {
+        foreach ($this->getTemplateRecords($groups, $parameters, $domainRecords) as $record) {
             if ($this->isExist($domainRecords, $record)) {
                 continue;
             }
@@ -46,7 +46,7 @@ class Template
         return $changes;
     }
 
-    public function getTemplateRecords(array $groups = [], array $parameters = [])
+    public function getTemplateRecords(array $groups = [], array $parameters = [], array $domainRecords = [])
     {
         $records = [];
         foreach ((array)$this->data->records as $record) {
@@ -54,7 +54,7 @@ class Template
                 continue;
             }
             $this->validateRecord($record);
-            $records[] = $this->prepareRecord($record, $parameters);
+            $records[] = $this->prepareRecord($record, $parameters, $domainRecords);
         }
         return $records;
     }
@@ -98,6 +98,9 @@ class Template
             case 'SRV':
                 $requiredKeys = ['name', 'target', 'protocol', 'service', 'priority', 'weight', 'port', 'ttl'];
                 break;
+            case 'SPFM':
+                $requiredKeys = ['host', 'spfRules'];
+                break;
             default:
                 throw new Exception\RecordNotSupported("Record type '{$record->type}' is not supported");
         }
@@ -109,7 +112,7 @@ class Template
         }
     }
 
-    private function prepareRecord(\stdClass $record, array $parameters)
+    private function prepareRecord(\stdClass $record, array $parameters, array $domainRecords = [])
     {
         if (empty($parameters['fqdn']) || '.' === $parameters['fqdn']) {
             throw new \pm_Exception("Required 'fqdn' parameter is missing");
@@ -139,9 +142,106 @@ class Template
             case 'SRV':
                 $record->name = DomainDns::fullHost($fqdn, $record->name);
                 break;
+            case 'SPFM':
+                $record->type = 'TXT';
+                $record->host = DomainDns::fullHost($fqdn, $record->host);
+                $record->data = $this->applySpfm($record->spfRules, $this->getSpfFromDomainRecords($domainRecords, $fqdn));
+                unset($record->spfRules);
+                break;
         }
 
         return $record;
+    }
+
+    /**
+     * @param string $spfRules
+     * @param string $domainSpf
+     * @return string
+     */
+    public static function applySpfm($spfRules, $domainSpf)
+    {
+        $spfStart = 'v=spf1';
+        $spfEnd = '-all';
+        $qualifiers = ['+', '?', '~', '-'];
+
+        $newRules = $spfRules;
+        if(!is_null($domainSpf)) {
+            $domainSpfPieces = explode(" ", $domainSpf);
+            array_shift($domainSpfPieces);
+            $domainSpfEnd = array_pop($domainSpfPieces);
+            if ($domainSpfEnd !== $spfEnd) {
+                $spfEnd = $domainSpfEnd;
+            }
+
+            $spfRulesPieces = explode(" ", $spfRules);
+
+            $newRulesPiecesWithQualifiers = [];
+            foreach (array_merge($domainSpfPieces, $spfRulesPieces) as $spfPiece) {
+                $qualifier = '';
+                if ((strlen($spfPiece) > 0) && (in_array($spfPiece[0], $qualifiers))) {
+                    $qualifier = substr($spfPiece, 0, 1);
+                    $spfPiece = substr($spfPiece, 1, strlen($spfPiece) - 1);
+                }
+                if (!array_key_exists($spfPiece, $newRulesPiecesWithQualifiers)) {
+                    $newRulesPiecesWithQualifiers[$spfPiece] = $qualifier;
+                }
+            }
+
+            $newRulesPieces = [];
+            foreach ($newRulesPiecesWithQualifiers as $spfPiece => $qualifier) {
+                $newRulesPieces[] = $qualifier . $spfPiece;
+            }
+
+            $newRules = join(' ', array_unique($newRulesPieces));
+        }
+
+        return $spfStart . ' ' . $newRules . ' ' . $spfEnd;
+    }
+
+    private function getSpfFromDomainRecords(array $records, $fqdn = null)
+    {
+        $spfRecords = $this->filterSpfRecords($records, $fqdn);
+
+        if (count($spfRecords) > 1) {
+            throw new Exception\MultipleSpfRecords("Multiple SPF records found for {$fqdn} Leave only one record to fix the issue.");
+        }
+
+        if (count($spfRecords) === 0) {
+            return null;
+        }
+
+        return $spfRecords[0]->data;
+    }
+
+    private function filterSpfRecords(array $records, $fqdn = null)
+    {
+        $spfStart = 'v=spf1 ';
+        $spfEnd = 'all';
+
+        $spfStartLen = strlen($spfStart);
+        $spfEndLen = strlen($spfEnd);
+
+        $spfRecords = [];
+        foreach ($records as $record) {
+            if ($record->type !== 'TXT') {
+                continue;
+            }
+
+            if (!is_null($fqdn) &&($record->host !== $fqdn)) {
+                continue;
+            }
+
+            $dataLen = strlen($record->data);
+            if (
+                ($dataLen > $spfStartLen + $spfEndLen)
+                && (substr($record->data, 0, $spfStartLen) === $spfStart)
+                && (substr($record->data, $dataLen-$spfEndLen, $dataLen) === $spfEnd)
+            ) {
+                $spfRecords[] = $record;
+            }
+        }
+
+        return $spfRecords;
     }
 
     private function isExist(array $domainRecords, \stdClass $record)
