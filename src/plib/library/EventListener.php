@@ -1,5 +1,5 @@
 <?php
-// Copyright 1999-2018. Plesk International GmbH.
+// Copyright 1999-2019. Plesk International GmbH.
 
 class Modules_DomainConnect_EventListener implements EventListener
 {
@@ -8,6 +8,7 @@ class Modules_DomainConnect_EventListener implements EventListener
         return [
             'domain_create',
             'site_create',
+            'subdomain_create',
         ];
     }
 

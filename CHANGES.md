@@ -1,3 +1,8 @@
+# 1.3.1 (11 April 2019)
+
+* [-] Domain Connect no longer suggests configuring DNS settings for a domain when the domain's DNS hosting is configured in Plesk. (EXTPLESK-590)
+* [-] If a domain cannot be resolved, this event is now logged as a warning in `/var/log/plesk/panel.log` (Plesk for Linux) and `%plesk_dir%\admin\logs\php_error.log` (Plesk for Windows). (EXTPLESK-619)
+
 # 1.3.0 (06 March 2019)
 
 * [+] The extension now adds the "nameServers" key to JSON returned to a domain's third-party service. This helps the service provider identify that Plesk is the authoritative DNS provider for the domain.
