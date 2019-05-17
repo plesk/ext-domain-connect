@@ -26,15 +26,15 @@
     },
     {
       "groupId": "Verification",
-      "type": "TXT",
+      "type": "%spftype%",
       "host": "@",
-      "data": "%spftxt%",
+      "data": "%spfdata%",
       "ttl": "600"
     },
     {
       "groupId": "Webmail",
       "type": "A",
-      "host": "webmail.@",
+      "host": "webmail",
       "pointsTo": "%webmailip%",
       "ttl": "600"
     }

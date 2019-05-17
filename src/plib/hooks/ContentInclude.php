@@ -43,7 +43,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             case 'smb/mail-settings/edit':
             case 'smb/email-address/list':
                 // Mail settings and emails list
-                $this->getMailServiceMessage($request->getParam('id'));
+                $this->handleService($request->getParam('id'), \pm_Config::get('mailServiceId'));
                 break;
             default:
                 return;
@@ -93,7 +93,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
     }
 
-    public function getMailServiceMessage($domainId, $permanentMessage = false)
+    public function handleService($domainId, $serviceId, $permanentMessage = false)
     {
         try {
             $domain = \pm_Domain::getByDomainId($domainId);
@@ -101,25 +101,25 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             pm_Log::warn($e);
             return;
         }
-        $domainConnect = new DomainConnect($domain, \pm_Config::get('mailServiceId'));
+        $domainConnect = new DomainConnect($domain, $serviceId);
 
         if ($permanentMessage) {
-            $domainConnect->init();
+            $domainConnect->initService();
         }
 
-        if (!$domainConnect->isEnabled()) {
+        if (!$domainConnect->isEnabled($serviceId)) {
             return;
         }
 
-        if ($domainConnect->isConnected('mail')) {
+        if ($domainConnect->isConnected($serviceId)) {
             return;
         }
 
-        if (!$domainConnect->isConnectable('mail')) {
+        if (!$domainConnect->isConnectable($serviceId)) {
             return;
         }
 
-        $url = $domainConnect->getConfigureUrl('mail');
+        $url = $domainConnect->getConfigureUrl($serviceId);
 
         $message = \pm_Locale::lmsg(
             'message.connect',
@@ -159,7 +159,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             return;
         }
 
-        $url = $domainConnect->getConfigureUrl('web');
+        $url = $domainConnect->getConfigureUrl();
 
         $message = \pm_Locale::lmsg(
             'message.connect',

@@ -163,21 +163,31 @@ class DomainConnect
     {
         $spfRecords = [];
         foreach ($allRecords as $record) {
-            if ($record->type == 'TXT' && preg_match("/^v=spf1 .*\+mx.+\:" . $hostname . ".+all$/", $record->data) == 1)
-                $spfRecords[] = $record;
-            if ($record->type == 'SPFM')
-                $spfRecords[] = $record;
+            if (($record->type == 'TXT' && preg_match("/^v=spf1 .*\+mx.+\:" . $hostname . ".+all$/", $record->data) == 1) ||
+                ($record->type == 'SPFM'))
+                $spfRecords[] = ['spftype' => $record->type, 'spfdata' => $record->data];
         }
         return $spfRecords;
     }
 
     /**
-     * @param array $allRecords
      * @return object|null
      */
-    private function getRecordsForMail(array $allRecords)
+    private function getRecordsForMail()
     {
         $objectToReturn = null;
+        $allRecords = array_map(
+            function ($record) {
+                $record->host = rtrim($record->host, '.');
+                $record->pointsTo = rtrim($record->pointsTo, '.');
+                return $record;
+            },
+            (new DomainDns($this->domain))->getRecords()
+        );
+        $groupIdMail = \pm_Config::get('mailServiceGroupId');
+        $groupIdWebmail = \pm_Config::get('webMailServiceGroupId');
+        $groupIdSpf = \pm_Config::get('spfServiceGroupId');
+
         //start configure MX and SPF records for mail service
         try {
             $resolvedIp = Dns::mxRecord($this->domain->getName());
@@ -186,7 +196,7 @@ class DomainConnect
             if ($resolvedIp['ip'] == $mxRecordA->pointsTo) {
                 \pm_Log::info("MX record for domain {$this->domain->getDisplayName()} is already resolved to the current server");
             }
-            $objectToReturn = (object)['resolvedIp' => $resolvedIp, 'host' => $mxRecord->pointsTo, 'priority' => $mxRecord->priority];
+            $objectToReturn = (object)[$groupIdMail => ['mxip' => $resolvedIp, 'mxhost' => $mxRecord->pointsTo, 'mxpriority' => $mxRecord->priority]];
         } catch (\pm_Exception $e) {
             \pm_Log::warn($e);
             return $objectToReturn;
@@ -195,7 +205,7 @@ class DomainConnect
         try {
             $hostname = $this->apiClient->server()->getGeneralInfo()->serverName;
             $spfRecords = $this->getSpfRecords($allRecords, $hostname);
-            $objectToReturn->spfRecords = $spfRecords;
+            $objectToReturn->$groupIdSpf = $spfRecords;
         } catch (\Exception $e) {
             \pm_Log::warn($e);
         }
@@ -208,7 +218,7 @@ class DomainConnect
                     }
                 )
             );
-            $objectToReturn->webmailIpRecord = $webmailIpRecord;
+            $objectToReturn->$groupIdWebmail->webmailip = $webmailIpRecord;
         } catch (\Exception $e) {
             \pm_Log::warn($e);
         }
@@ -218,7 +228,7 @@ class DomainConnect
 
     public function init()
     {
-        if (!$this->webServiceEnabled() && !$this->mailServiceEnabled()) {
+        if (!$this->domain->hasHosting()) {
             return;
         }
 
@@ -226,64 +236,35 @@ class DomainConnect
         $this->domain->setSetting('connected', 0);
         $this->domain->setSetting('connectable', 0);
         $this->domain->setSetting('configureUrl', '');
-        $this->domain->setSetting('mailConnected', 0);
-        $this->domain->setSetting('mailConnectable', 0);
-        $this->domain->setSetting('mailConfigureUrl', '');
         $this->domain->setSetting('configureLinkClicked', 0);
 
-        $groupIdMail = \pm_Config::get('mailServiceGroupId');
-        $groupIdWeb = \pm_Config::get('webServiceGroupId');
-        $groupIdWebmail = \pm_Config::get('webMailServiceGroupId');
-        $groupIdSpf = \pm_Config::get('spfServiceGroupId');
-
-        $groupId = [];
-        $allRecords = array_map(
-            function ($record) {
-                $record->host = rtrim($record->host, '.');
-                $record->pointsTo = rtrim($record->pointsTo, '.');
-                return $record;
-            },
-            (new DomainDns($this->domain))->getRecords()
-        );
-
-
-        $webRecordsObject = $this->getRecordsForWeb();
-        $mailRecordsObject = $this->getRecordsForMail($allRecords);
-        if (is_null($webRecordsObject) && is_null($mailRecordsObject)) {
-            \pm_Log::info("Domain {$this->domain->getDisplayName()} is already resolved to the current server");
-            $this->domain->setSetting('connected', 1);
-            return;
-        } elseif (!is_null($webRecordsObject) && $webRecordsObject->resolvedIp != '') {
-            \pm_Log::debug("Domain {$this->domain->getDisplayName()} is resolved to {$webRecordsObject->resolvedIp}, but expected " .
-                join(' or ', $webRecordsObject->hostingIps));
-            $groupId[] = $groupIdWeb;
-        } elseif (!is_null($mailRecordsObject) && $mailRecordsObject->resolvedIp != '') {
-            \pm_Log::info("MX record for domain {$this->domain->getDisplayName()} is resolved to {$mailRecordsObject->resolvedIp}, but expected " .
-                join(' or ', $mailRecordsObject->hostingIps));
-        }
-
-
-        $templates = [];
-        if (in_array($groupIdWeb, $groupId)) {
-            $templates['ip'] = reset($hostingIps);
-        }
-        if (in_array($groupIdMail, $groupId)) {
-            $templates['mxhost'] = $mxResolvedIp['host']; $templates['mxip'] = $mxResolvedIp['ip']; $templates['mxpriority'] = $mxResolvedIp['priority'];
-        }
-        if (in_array($groupIdWebmail, $groupId)) {
-            $templates['webmailip'] = $webmailIpRecord->pointsTo;
-        }
-        if (in_array($groupIdSpf, $groupId)) {
-            $templates['spftxt'] = reset($spfRecords)->data;
-        }
-        $templates['groupId'] = implode(",", $groupId);
-
         try {
-            $url = $this->getApplyTemplateUrl($this->serviceId, $templates);
-        } catch (\Exception $e) {
-            \pm_Log::info($e->getMessage());
+            $resolvedIp = Dns::aRecord($this->domain->getName());
+        } catch (\pm_Exception $e) {
+            \pm_Log::warn($e);
+
+            $resolvedIp = '';
+        }
+
+        $hostingIps = $this->domain->getIpAddresses();
+
+        if (in_array($resolvedIp, $hostingIps)) {
+            \pm_Log::info("Domain {$this->domain->getDisplayName()} is already resolved to the current server");
+
+            $this->domain->setSetting('connected', 1);
+
             return;
         }
+
+        \pm_Log::debug("Domain {$this->domain->getDisplayName()} is resolved to {$resolvedIp}, but expected " . join(' or ', $hostingIps));
+
+        $properties = ['ip' => reset($hostingIps)];
+        if ($this->domainHasParent()) {
+            $properties['host'] = DomainDns::relativeHost($this->getRootDomainName(), $this->domain->getName());
+            $properties['groupId'] = \pm_Config::get('webServiceGroupId');
+        }
+
+        $url = $this->getApplyTemplateUrl($this->serviceId, $properties);
 
         $this->domain->setSetting('connectable', 1);
         $this->domain->setSetting('configureUrl', $url);
@@ -294,57 +275,34 @@ class DomainConnect
         }
     }
 
-    public function initMail()
+
+    public function initService()
     {
-        if (!$this->webServiceEnabled() && !$this->mailServiceEnabled()) {
+        $isenabled = $this->serviceId . 'ServiceEnabled';
+        if (!$this->$isenabled()) {
             return;
         }
 
-        $this->domain->setSetting('enabled', 1);
-        $this->domain->setSetting('connected', 0);
-        $this->domain->setSetting('connectable', 0);
-        $this->domain->setSetting('configureUrl', '');
-        $this->domain->setSetting('mailConnected', 0);
-        $this->domain->setSetting('mailConnectable', 0);
-        $this->domain->setSetting('mailConfigureUrl', '');
-        $this->domain->setSetting('configureLinkClicked', 0);
-
-        $groupIdMail = \pm_Config::get('mailServiceGroupId');
-        $groupIdWeb = \pm_Config::get('webServiceGroupId');
-        $groupIdWebmail = \pm_Config::get('webMailServiceGroupId');
-        $groupIdSpf = \pm_Config::get('spfServiceGroupId');
+        $this->domain->setSetting($this->serviceId . 'enabled', 1);
+        $this->domain->setSetting($this->serviceId . 'connected', 0);
+        $this->domain->setSetting($this->serviceId . 'connectable', 0);
+        $this->domain->setSetting($this->serviceId . 'configureUrl', '');
+        $this->domain->setSetting($this->serviceId . 'configureLinkClicked', 0);
 
         $groupId = [];
-        $allRecords = array_map(
-            function ($record) {
-                $record->host = rtrim($record->host, '.');
-                $record->pointsTo = rtrim($record->pointsTo, '.');
-                return $record;
-            },
-            (new DomainDns($this->domain))->getRecords()
-        );
 
-
-        $webRecordsObject = $this->getRecordsForWeb();
-        $mailRecordsObject = $this->getRecordsForMail($allRecords);
-        if (is_null($webRecordsObject) && is_null($mailRecordsObject)) {
-            \pm_Log::info("Domain {$this->domain->getDisplayName()} is already resolved to the current server");
-            $this->domain->setSetting('connected', 1);
+        $getRecords = 'getRecordsFor' . ucfirst($this->serviceId);
+        $recordsObject = $this->$getRecords();
+        if (!is_null($recordsObject)) {
+            $hostingIps = $this->domain->getIpAddresses();
+            \pm_Log::info("Domain {$this->domain->getDisplayName()} service {$this->serviceId} is resolved somewhere else but expected " .
+                join(' or ', $hostingIps));
+            \pm_Log::debug("Got the following result to process service {$this->serviceId}: " . print_r($recordsObject, true));
+        } else {
             return;
-        } elseif (!is_null($webRecordsObject) && $webRecordsObject->resolvedIp != '') {
-            \pm_Log::debug("Domain {$this->domain->getDisplayName()} is resolved to {$webRecordsObject->resolvedIp}, but expected " .
-                join(' or ', $webRecordsObject->hostingIps));
-            $groupId[] = $groupIdWeb;
-        } elseif (!is_null($mailRecordsObject) && $mailRecordsObject->resolvedIp != '') {
-            \pm_Log::info("MX record for domain {$this->domain->getDisplayName()} is resolved to {$mailRecordsObject->resolvedIp}, but expected " .
-                join(' or ', $mailRecordsObject->hostingIps));
         }
-
 
         $templates = [];
-        if (in_array($groupIdWeb, $groupId)) {
-            $templates['ip'] = reset($hostingIps);
-        }
         if (in_array($groupIdMail, $groupId)) {
             $templates['mxhost'] = $mxResolvedIp['host']; $templates['mxip'] = $mxResolvedIp['ip']; $templates['mxpriority'] = $mxResolvedIp['priority'];
         }
