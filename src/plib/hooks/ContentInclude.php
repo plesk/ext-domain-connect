@@ -14,7 +14,6 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
-
         if (is_null($request)) {
             return;
         }
@@ -24,8 +23,6 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         $action = $request->getActionName();
 
         switch ("{$module}/{$controller}/${action}") {
-//            https://134.209.228.146:8443/smb/mail-settings/edit/id/30/domainId/30
-//            https://134.209.228.146:8443/smb/email-address/list/domainId/30
             case 'smb/web/view':
             case 'smb/web/overview':
                 // "Websites & Domains" page
@@ -41,9 +38,10 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
                 $this->addDnsSettingsMessages($request->getParam('id'), $request->getParam('type'));
                 break;
             case 'smb/mail-settings/edit':
+            case 'smb/mail-settings/index':
             case 'smb/email-address/list':
                 // Mail settings and emails list
-                $this->handleService($request->getParam('id'), \pm_Config::get('mailServiceId'));
+                $this->handleService($request->getParam('domainId'), \pm_Config::get('mailServiceId'));
                 break;
             default:
                 return;
@@ -78,8 +76,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
                     $domain = \pm_Domain::getByDomainId($domainId);
                 } catch (pm_Exception $e) {
                     \pm_Log::warn($e);
+                    return;
                 }
-
                 $this->handleDomain($domain, true);
             }
         } elseif ($typeParam === 'domain') {
@@ -87,8 +85,8 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
                 $domain = \pm_Domain::getByDomainId($idParam);
             } catch (pm_Exception $e) {
                 \pm_Log::warn($e);
+                return;
             }
-
             $this->handleDomain($domain, true);
         }
     }
@@ -97,7 +95,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
     {
         try {
             $domain = \pm_Domain::getByDomainId($domainId);
-        } catch (pm_Exception $e) {
+        } catch (\pm_Exception $e) {
             pm_Log::warn($e);
             return;
         }
@@ -122,7 +120,7 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         $url = $domainConnect->getConfigureUrl($serviceId);
 
         $message = \pm_Locale::lmsg(
-            'message.connect',
+            'message.' . $serviceId . 'connect',
             [
                 'domain' => $domain->getDisplayName(),
                 'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',

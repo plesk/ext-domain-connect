@@ -65,7 +65,6 @@ class Template
         foreach ($records as $record) {
             switch ($record->type) {
                 case 'NS':
-                case 'MX':
                     if (isset($record->pointsTo)) {
                         $record->pointsTo = rtrim($record->pointsTo, '.');
                     }

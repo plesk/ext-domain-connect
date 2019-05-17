@@ -19,8 +19,10 @@ class Modules_DomainConnect_EventListener implements EventListener
         if (in_array($action, $this->filterActions())) {
             $domain = \pm_Domain::getByDomainId($objectId);
             $domainConnect = new DomainConnect($domain);
-
             $domainConnect->init();
+
+            $domainConnect = new DomainConnect($domain, \pm_Config::get('mailServiceId'));
+            $domainConnect->initService();
         }
     }
 }

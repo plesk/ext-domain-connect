@@ -12,10 +12,7 @@ class Modules_DomainConnect_ConfigDefaults extends pm_Hook_ConfigDefaults
             'providerName' => 'Plesk',
             'webServiceId' => 'web',
             'mailServiceId' => 'mail',
-            'mailServiceGroupId' => 'MailService',
             'webServiceGroupId' => 'WebService',
-            'webMailServiceGroupId' => 'Webmail',
-            'spfServiceGroupId' => 'Verification',
         ];
     }
 }

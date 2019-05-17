@@ -5,38 +5,33 @@
   "serviceName": "E-mail Hosting on Plesk",
   "version": 1,
   "warnPhishing": true,
-  "logoUrl": "/modules/domain-connect/logos/plesk.com.mail.png",
+  "logoUrl": "/modules/domain-connect/logos/plesk.com.web.png",
   "description": "Enables a mail hosting on the server powered by Plesk.",
   "variableDescription": "ip is the IP address of the server.",
   "records": [
     {
-      "groupId": "MailService",
       "type": "MX",
-      "pointsTo": "%mxhost%",
+      "pointsTo": "mail.@",
       "host": "@",
-      "priority": "%mxpriority%",
+      "priority": "10",
       "ttl": "600"
     },
     {
-      "groupId": "MailService",
       "type": "A",
-      "host": "%mxhost%",
-      "pointsTo": "%mxip%",
+      "host": "mail",
+      "pointsTo": "%ip%",
       "ttl": "600"
     },
     {
-      "groupId": "Verification",
-      "type": "%spftype%",
-      "host": "@",
-      "data": "%spfdata%",
-      "ttl": "600"
-    },
-    {
-      "groupId": "Webmail",
       "type": "A",
       "host": "webmail",
-      "pointsTo": "%webmailip%",
+      "pointsTo": "%ip%",
       "ttl": "600"
+    },
+    {
+      "type": "SPFM",
+      "host": "@",
+      "spfRules": "%spfrules%"
     }
   ]
 }
