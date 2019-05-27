@@ -11,6 +11,8 @@ class Modules_DomainConnect_ConfigDefaults extends pm_Hook_ConfigDefaults
             'providerId' => 'plesk.com',
             'providerName' => 'Plesk',
             'webServiceId' => 'web',
+            'mailServiceId' => 'mail',
+            'webServiceGroupId' => 'WebService',
         ];
     }
 }

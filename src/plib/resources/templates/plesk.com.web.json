@@ -10,7 +10,7 @@
     "variableDescription": "ip is the IP address of the server.",
     "records": [
         {
-            "groupId": "web",
+            "groupId": "WebService",
             "type": "A",
             "host": "@",
             "pointsTo": "%ip%",

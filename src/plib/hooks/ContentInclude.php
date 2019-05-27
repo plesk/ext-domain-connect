@@ -14,7 +14,6 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
         }
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
-
         if (is_null($request)) {
             return;
         }
@@ -37,6 +36,12 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             case 'smb/dns-zone/records-list':
             case 'smb/dns-zone/who-is':
                 $this->addDnsSettingsMessages($request->getParam('id'), $request->getParam('type'));
+                break;
+            case 'smb/mail-settings/edit':
+            case 'smb/mail-settings/index':
+            case 'smb/email-address/list':
+                // Mail settings and emails list
+                $this->handleService($request->getParam('domainId'), \pm_Config::get('mailServiceId'));
                 break;
             default:
                 return;
@@ -67,20 +72,74 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
             list($type, $domainId) = explode(':', $idParam, 2);
 
             if (in_array($type, ['d', 's']) && is_numeric($domainId)) {
-                $domain = \pm_Domain::getByDomainId($domainId);
-
+                try {
+                    $domain = \pm_Domain::getByDomainId($domainId);
+                } catch (pm_Exception $e) {
+                    \pm_Log::warn($e);
+                    return;
+                }
                 $this->handleDomain($domain, true);
             }
         } elseif ($typeParam === 'domain') {
-            $domain = \pm_Domain::getByDomainId($idParam);
-
+            try {
+                $domain = \pm_Domain::getByDomainId($idParam);
+            } catch (pm_Exception $e) {
+                \pm_Log::warn($e);
+                return;
+            }
             $this->handleDomain($domain, true);
         }
     }
 
+    public function handleService($domainId, $serviceId, $permanentMessage = false)
+    {
+        try {
+            $domain = \pm_Domain::getByDomainId($domainId);
+        } catch (\pm_Exception $e) {
+            pm_Log::warn($e);
+            return;
+        }
+        $domainConnect = new DomainConnect($domain, $serviceId);
+
+        if ($permanentMessage) {
+            $domainConnect->initService();
+        }
+
+        if (!$domainConnect->isEnabled($serviceId)) {
+            return;
+        }
+
+        if ($domainConnect->isConnected($serviceId)) {
+            return;
+        }
+
+        if (!$domainConnect->isConnectable($serviceId)) {
+            return;
+        }
+
+        $url = $domainConnect->getConfigureUrl($serviceId);
+
+        $message = \pm_Locale::lmsg(
+            'message.' . $serviceId . 'connect',
+            [
+                'domain' => $domain->getDisplayName(),
+                'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',
+            ]
+        );
+
+        $closable = !$permanentMessage;
+
+        $this->warnings[] = [
+            $domain->getId(),
+            $message,
+            $closable,
+            $domainConnect->getWindowOptions(),
+        ];
+    }
+
     private function handleDomain(\pm_Domain $domain, $permanentMessage = false)
     {
-        $domainConnect = new DomainConnect($domain);
+        $domainConnect = new DomainConnect($domain, \pm_Config::get('webServiceId'));
 
         if ($permanentMessage) {
             $domainConnect->init();
@@ -100,10 +159,13 @@ class Modules_DomainConnect_ContentInclude extends pm_Hook_ContentInclude
 
         $url = $domainConnect->getConfigureUrl();
 
-        $message = \pm_Locale::lmsg('message.connect', [
+        $message = \pm_Locale::lmsg(
+            'message.connect',
+            [
             'domain' => $domain->getDisplayName(),
             'link' => '<a href="' . $this->escapeHTML($url) . '">' . \pm_Locale::lmsg('message.link') . '</a>',
-        ]);
+            ]
+        );
 
         $closable = !$permanentMessage;
 

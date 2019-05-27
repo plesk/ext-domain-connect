@@ -1,6 +1,8 @@
 <?php
 // Copyright 1999-2018. Plesk International GmbH.
 
+use PleskExt\DomainConnect\DomainConnect;
+
 class IndexController extends pm_Controller_Action
 {
     public function indexAction()
@@ -21,7 +23,7 @@ class IndexController extends pm_Controller_Action
         }
 
         $domain = new pm_Domain($domainId);
-        $domainConnect = new \PleskExt\DomainConnect\DomainConnect($domain);
+        $domainConnect = new DomainConnect($domain);
         $domainConnect->disable();
         $this->_helper->json([]);
     }
