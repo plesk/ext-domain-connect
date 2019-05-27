@@ -1,18 +1,23 @@
 {
     "providerId": "leadpages.net",
     "providerName": "Leadpages",
-    "serviceId": "custom-domain-prod",
+    "serviceId": "custom-domain-apex-prod",
     "serviceName": "Leadpages Custom Domain",
     "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/leadpages.net.custom-domain-prod.svg",
+    "logoUrl": "/modules/domain-connect/logos/leadpages.net.custom-domain-apex-prod.svg",
     "description": "Enables a domain to work with Leadpages",
     "syncRedirectDomain": "my.leadpages.net",
-    "variableDescription": "HOST: The subdomain for the domain.",
-    "hostRequired": true,
+    "hostRequired": false,
     "records": [
         {
-            "type": "CNAME",
+            "type": "A",
             "host": "@",
+            "pointsTo": "35.202.21.90",
+            "ttl": 600
+        },
+        {
+            "type": "CNAME",
+            "host": "www",
             "pointsTo": "custom-proxy.leadpages.net",
             "ttl": 600
         }

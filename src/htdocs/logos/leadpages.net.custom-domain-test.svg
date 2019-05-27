@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="248px" height="189px" viewBox="0 0 248 189" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.5.1 (25234) - http://www.bohemiancoding.com/sketch -->
-    <title>logo_icon</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
         <g id="logo_icon" sketch:type="MSLayerGroup">
             <g id="Layer_1" sketch:type="MSShapeGroup">
-                <g id="Group" fill="#0069FF">
+                <g class="Group" fill="#ffffff">
                     <g transform="translate(22.000000, 0.000000)" id="Shape">
                         <path d="M202.1,78.8 L173.9,64 L103.6,100.8 C102.6,101.3 101.4,101.3 100.4,100.8 L30.1,64 L1.9,78.8 C0.4,79.6 0.4,81.7 1.9,82.4 L100.4,134 C101.4,134.5 102.6,134.5 103.6,134 L202.1,82.4 C203.6,81.6 203.6,79.5 202.1,78.8 L202.1,78.8 Z"></path>
                         <path d="M180.7,45 L103.6,85.4 C102.6,85.9 101.4,85.9 100.4,85.4 L23.3,45 C21.8,44.2 21.8,42.1 23.3,41.4 L100.4,1 C101.4,0.5 102.6,0.5 103.6,1 L180.7,41.4 C182.1,42.1 182.1,44.2 180.7,45 L180.7,45 Z"></path>
                     </g>
                     <path d="M246.7,118.3 L215.8,102.1 L125.6,149.3 C124.6,149.8 123.4,149.8 122.4,149.3 L32.2,102.1 L1.3,118.3 C-0.2,119.1 -0.2,121.2 1.3,121.9 L122.4,185.3 C123.4,185.8 124.6,185.8 125.6,185.3 L246.7,122 C248.2,121.2 248.2,119.1 246.7,118.3 L246.7,118.3 Z" id="Shape"></path>
-                </g>
-                <g id="Group" transform="translate(179.000000, 172.000000)" fill="#020020">
-                    <path d="M7.8,3.5 L7.8,16.8 L4.9,16.8 L4.9,3.5 L0.2,3.5 L0.2,0.8 L12.6,0.8 L12.6,3.5 L7.8,3.5 L7.8,3.5 Z" id="Shape"></path>
-                    <path d="M27.9,16.8 L27.9,5.4 L23.7,16.6 L21.6,16.6 L17.5,5.3 L17.5,16.9 L14.7,16.9 L14.7,0.9 L18.6,0.9 L22.8,12.3 L27,0.9 L30.7,0.9 L30.7,16.9 L27.9,16.9 L27.9,16.8 Z" id="Shape"></path>
                 </g>
             </g>
         </g>

@@ -1,6 +1,8 @@
 <?php
 // Copyright 1999-2019. Plesk International GmbH.
 
+use PleskExt\DomainConnect\DomainConnect;
+
 class Modules_DomainConnect_EventListener implements EventListener
 {
     public function filterActions()
@@ -16,9 +18,11 @@ class Modules_DomainConnect_EventListener implements EventListener
     {
         if (in_array($action, $this->filterActions())) {
             $domain = \pm_Domain::getByDomainId($objectId);
-            $domainConnect = new \PleskExt\DomainConnect\DomainConnect($domain);
-
+            $domainConnect = new DomainConnect($domain);
             $domainConnect->init();
+
+            $domainConnect = new DomainConnect($domain, \pm_Config::get('mailServiceId'));
+            $domainConnect->initService();
         }
     }
 }

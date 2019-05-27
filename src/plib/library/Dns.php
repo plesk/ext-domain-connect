@@ -34,4 +34,24 @@ class Dns
             }, $dnsRecords)
         );
     }
+
+    /**
+     * @param $domainName
+     * @return mixed
+     * @throws \pm_Exception
+     */
+    public static function mxRecord($domainName)
+    {
+        $dnsRecord = @dns_get_record($domainName, DNS_MX);
+        if (false === $dnsRecord) {
+            $error = error_get_last()['message'];
+            throw new \pm_Exception("Failed to resolve {$domainName}: {$error}");
+        }
+
+        if (isset($dnsRecord[0]['host'])) {
+            return ['host' => $dnsRecord[0]['host'], 'ip' => self::aRecord($dnsRecord[0]['host']), 'priority' => $dnsRecord[0]['pri']];
+        }
+        throw new \pm_Exception("Could not find MX DNS record for {$domainName}.");
+    }
+
 }
