@@ -1,3 +1,10 @@
+# 1.4.0 (09 August 2019)
+
+* [+] Users can now automatically configure email DNS-records.
+* [+] Users can now automatically configure DNS for subdomains. 
+* [+] Users can now add the Bing Webmaster Tools service to their websites to access their data and manage them on Bing. 
+* [+] The extension now supports SPFM records. This enables to update the existing SPF record with the rules from the SPFM record.
+
 # 1.3.1 (11 April 2019)
 
 * [-] Domain Connect no longer suggests configuring DNS settings for a domain when the domain's DNS hosting is configured in Plesk. (EXTPLESK-590)
