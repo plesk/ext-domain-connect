@@ -27,6 +27,7 @@
 * [*] Improved performance with a large number of domains
 * [*] Translated the extension and its description into several new languages
 * [*] Updated Domain Connect logo
+* [*] Improved the loading speed of the extension's screens. (EXTPLESK-466)
 
 # 1.1.1 (31 July 2018)
 
