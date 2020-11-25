@@ -33,4 +33,5 @@ $data = array_filter([
     'height' => 750,
     'nameServers' => $domainDns->getNameServers(),
 ]);
+header("Content-Type: application/json");
 echo json_encode($data);
