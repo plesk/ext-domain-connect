@@ -1,0 +1,12 @@
+base_path: "%ENV:SERGE_WORK_DIR%/po"
+preserve_hierarchy: true
+files:
+  - ignore:
+      - /[a-z]{2}-[A-Z]{2}/**/*.po
+    import_eq_suggestions: 1
+    languages_mapping:
+      locale_with_underscore:
+        ar: ar_AE
+        fil: tl_PH
+    source: /ext-domain-connect/**/*.po
+    translation: /%locale_with_underscore%/%original_path%/%original_file_name%

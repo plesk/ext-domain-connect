@@ -1,0 +1,25 @@
+---
+serge:
+  config: .serge
+ts:
+  kind: crowdin
+  config: crowdin.yml
+  name: "Extension: Domain Connect"
+  identifier: ext-domain-connect
+  join_policy: private
+  language_access_policy: moderate
+  language_mapping:
+    es: es-es
+    sv: sv-se
+    pt: pt-pt
+    tl-ph: fil
+trigger:
+  kind: timer
+  schedule: "50 1,13 * * 1-5"
+vcs:
+  branch: "task-crowdin-localization-changes"
+  reviewers:
+    - ssurmina
+browse:
+  login: domain-connect
+  password: cXdlcXdl
