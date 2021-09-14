@@ -1,0 +1,138 @@
+inc
+{
+    php-check
+    {
+        callback_plugins
+        {
+            {
+                plugin         run_command
+                phase          after_save_localized_file
+                data
+                {
+                    command    php -l %OUTFILE%
+                }
+            }
+        }
+    }
+    job-common
+    {
+        @inherit                    tailor.inc#job-common
+        optimizations               YES
+        active                      YES
+        debug                       YES
+        source_language             en
+        destination_languages       de ja ru ro fr es ca cs da el fi he hu
+                                    sv tr uk vi pt id th ms nb pl it ko nl
+                                    ar zh-cn zh-tw pt-br tl-ph
+        normalize_strings           NO
+        source_process_subdirs      YES
+        db_source                   DBI:SQLite:dbname=%ENV:SERGE_WORK_DIR%/serge.db3
+        db_namespace                ext-domain-connect
+        reuse_translations          YES
+        reuse_orphaned              YES
+        output_lang_files           YES
+        output_default_lang_file    NO
+        output_encoding             UTF-8
+        output_bom                  NO
+
+        serializer
+        {
+            plugin          serialize_po
+        }
+
+        callback_plugins
+        {
+            {
+                plugin         replace_strings
+                phase          rewrite_lang_macros
+                data
+                {
+                    replace    ar-AE ar sg
+                }
+            }
+        }
+
+        ts_file_path            %ENV:SERGE_WORK_DIR%/po/%LOCALE:FULL%/ext-domain-connect/%FILE%.po
+        ts_default_lang_file    YES
+        source_ts_file_path     %ENV:SERGE_WORK_DIR%/po/ext-domain-connect/%FILE%.po
+    }
+}
+
+sync
+{
+    ts
+    {
+        plugin      crowdin
+        data
+        {
+            config_file             crowdin.yml
+            import_eq_suggestions   NO
+            auto_approve_imported   YES
+        }
+    }
+}
+
+jobs
+{
+    {
+        @inherit                .#inc/job-common .#inc/php-check
+
+        id                      serge.l10n.plesk.ext.domain-connect.php
+        name                    Plesk Domain Connect Extension PHP Locales
+        source_dir              %ENV:SERGE_DATA_DIR%/src/plib/resources/locales
+        source_match            en-US.php$
+        source_path_prefix      php/
+        output_file_path        %ENV:SERGE_DATA_DIR%/src/plib/resources/locales/%CULTURE%.%EXT%
+        parser
+        {
+            plugin          metaparser
+            data
+            {
+                keyvalue        ^\s*['"](?<key>.+)['"]\s*=>\s*(?<q>["'])(?<val>(?:(?=(\\?))\4.)+?)\2.*$
+                localize        ^(?<pre>\s*['"].+['"]\s*=>\s*(["']))(?<val>(?:(?=(\\?))\4.)+?)(?<suf>\2.*)$
+                section         ^\s*['"](?<key>.+)['"]\s*=>\s*\[.*$
+                close           ^\s*\].*$
+                delim           ::
+                concat_before   ^\s*(?:[^<\/$'"\[\]\s]|",|<(br|a))
+                concat_after    =>\s*$
+                unescape        \\('|")  $1     g
+                escape          %Q%      \\%Q%  g
+            }
+        }
+    }
+    {
+        @inherit                  .#inc/job-common
+
+        id                        serge.l10n.plesk.ext.domain-connect.desc
+        name                      Plesk Domain Connect Extension Description
+        source_dir                %ENV:SERGE_DATA_DIR%
+        source_match              DESCRIPTION.md$
+        output_file_path          %ENV:SERGE_DATA_DIR%/src/_meta/descriptions/%CULTURE%.%EXT%
+        output_default_lang_file  YES
+        parser
+        {
+            plugin                parse_text
+        }
+    }
+    {
+        @inherit                  .#inc/job-common
+
+        id                        serge.l10n.plesk.ext.domain-connect.meta
+        name                      Plesk Domain Connect Extension Meta
+        source_dir                %ENV:SERGE_DATA_DIR%/src
+        source_match              meta.xml$
+        output_file_path          %ENV:SERGE_DATA_DIR%/src/meta.xml
+        output_single_file        YES
+        leave_untranslated_blank  YES
+        parser
+        {
+            plugin                parse_xml
+            data
+            {
+                node_match            \/description$
+                localize              xml:lang    %CULTURE%
+                with_keys             YES
+            }
+        }
+    }
+}
