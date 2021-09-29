@@ -1,4 +1,6 @@
-(function (app) {
+var extensionName = 'DomainConnect';
+Jsw.namespace('PleskExt.' + extensionName);
+var apply = function (app) {
     var ce = function (tag, attr, children) {
         attr = attr || {};
         children = children || [];
@@ -141,4 +143,5 @@
             window.close();
         }
     });
-})(PleskExt.DomainConnect);
+};
+PleskExt[extensionName].apply = apply;

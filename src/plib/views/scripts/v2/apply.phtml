@@ -3,11 +3,12 @@
 $this->headLink()->appendStylesheet(\pm_Context::getBaseUrl() . 'domain-connect.css');
 ?>
 <div id="ext-<?= \pm_Context::getModuleId() ?>-app"></div>
+<script src="<?= \pm_Context::getBaseUrl() ?>domain-connect-apply.js"></script>
 <script>
 //<![CDATA[
 Jsw.namespace('PleskExt.DomainConnect');
-PleskExt.DomainConnect = <?= json_encode($this->getVars()) ?>;
-PleskExt.DomainConnect.renderTo = document.getElementById('ext-<?= \pm_Context::getModuleId() ?>-app');
+var params = <?= json_encode($this->getVars()) ?>;
+params.renderTo = document.getElementById('ext-<?= \pm_Context::getModuleId() ?>-app');
+PleskExt.DomainConnect.apply(params);
 //]]>
 </script>
-<script src="<?= \pm_Context::getBaseUrl() ?>domain-connect-apply.js"></script>
