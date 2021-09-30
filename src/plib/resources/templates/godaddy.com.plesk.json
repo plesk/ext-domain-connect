@@ -1,32 +1,31 @@
 {
-    "providerId": "godaddy.com",
-    "providerName": "GoDaddy",
-    "serviceId": "plesk",
-    "serviceName": "Shared Hosting on Plesk",
-    "version": 1,
-    "logoUrl": "/modules/domain-connect/logos/godaddy.com.plesk.png",
-    "description": "Enables a domain to work with GoDaddy Shared Hosting powered by Plesk.",
-    "variableDescription": "v1 is the IP address of the server.",
-    "syncPubKeyDomain": "plesk.godaddy.com",
-    "syncRedirectDomain": "godaddy.com",
-    "records": [
-        {
-            "type": "A",
-            "host": "@",
-            "pointsTo": "%v1%",
-            "ttl": 600
-        },
-        {
-            "type": "A",
-            "host": "mssql",
-            "pointsTo": "%v1%",
-            "ttl": 600
-        },
-        {
-            "type": "CNAME",
-            "host": "www",
-            "pointsTo": "@",
-            "ttl": 600
-        }
-    ]
+  "providerId": "godaddy.com",
+  "providerName": "GoDaddy",
+  "serviceId": "plesk",
+  "serviceName": "plesk",
+  "version": 1,
+  "logoUrl": "https://www.domainconnect.org/wp-content/uploads/2020/02/godaddy_logo_new.png",
+  "description": "Enables a domain to work with GoDaddy Plesk",
+  "variableDescription": "v1 is the IP address of the server.",
+  "syncPubKeyDomain": "domain-attach.api.godaddy.com",
+  "records": [
+    {
+      "pointsTo": "%v1%",
+      "type": "A",
+      "host": "@",
+      "ttl": 3600
+    },
+    {
+      "pointsTo": "%v1%",
+      "type": "A",
+      "host": "mssql",
+      "ttl": 3600
+    },
+    {
+      "pointsTo": "@",
+      "type": "CNAME",
+      "host": "www",
+      "ttl": 3600
+    }
+  ]
 }

@@ -1,0 +1,24 @@
+{
+    "providerId": "hubspot.com",
+    "providerName": "HubSpot",
+    "serviceId": "hubspot-template-3",
+    "serviceName": "HubSpot CMS Site",
+    "version": 1,
+    "syncBlock": true,
+    "logoUrl": "https://domainconnect.org/wp-content/uploads/2017/02/HubSpot-768x223.png",
+    "description": "Enables an apex domain to work with the HubSpot CMS",
+    "variableDescription": "IPs: HubSpot CMS IPs",
+    "records": [{
+         "groupId":"a1",
+         "type":"A",
+         "host":"@",
+         "pointsTo":"%IP1%",
+         "ttl":600
+    },{
+         "groupId":"a2",
+         "type":"A",
+         "host":"@",
+         "pointsTo":"%IP2%",
+         "ttl":600
+    }]
+}
