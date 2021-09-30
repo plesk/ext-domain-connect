@@ -118,7 +118,7 @@ class DomainConnect
             $xml = $this->apiClient->Mail()->request("<mail><get_prefs><filter><site-id>" . $domain_id . "</site-id></filter></get_prefs></mail>");
             return $xml->prefs->mailservice == 'true';
         } catch (\Exception $e) {
-            \pm_Log::warn($e);
+            \pm_Log::debug($e->getMessage());
         }
         return false;
     }
