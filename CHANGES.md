@@ -1,3 +1,10 @@
+# 1.4.2 (8 October 2021)
+
+* [+] Users can now automatically configure DNS records for domains without hosting. (EXTPLESK-2993)
+* [*] Updated supported DNS templates.
+* [-] The extension can now determine without authentication if it supports a particular DNS template.
+* [-] The extension can no longer crash while configuring DNS records. (EXTPLESK-2602)
+
 # 1.4.1 (11 December 2020)
 
 * [*] Security improvements. 
