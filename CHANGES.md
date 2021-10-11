@@ -1,3 +1,7 @@
+# 1.4.3 (11 October 2021)
+
+* [*] Security improvements.
+
 # 1.4.2 (8 October 2021)
 
 * [+] Users can now automatically configure DNS records for domains without hosting. (EXTPLESK-2993)
