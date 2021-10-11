@@ -100,7 +100,7 @@ class PublicRequestHandler
             'providerName' => \pm_Config::get('providerName'),
             'providerDisplayName' => \pm_Config::get('providerDisplayName', $this->getGetParam('providerDisplayName')),
             'urlSyncUX' => "https://{$this->host}/modules/domain-connect/index.php/",
-            'urlAPI' => "https://{{$this->host}}/modules/domain-connect/public/index.php/",
+            'urlAPI' => "https://{$this->host}/modules/domain-connect/public/index.php/",
             'width' => 750,
             'height' => 750,
             'nameServers' => $domainDns->getNameServers(),
